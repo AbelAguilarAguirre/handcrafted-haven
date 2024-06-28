@@ -5,21 +5,21 @@ export default function Nav() {
     return (
         <>
             <nav className="">
-                <ul className="flex gap-10">
+                <ul className="flex justify-around flex-wrap gap-10 items-center">
                     <li>
-                        <Link href="/">Shop</Link>
+                        <Link className="border-black border rounded p-3" href="/">Shop</Link>
                     </li>
                     <li>
-                        <Link href="#">About Us</Link>
+                        <Link className="border-black border rounded p-3" href="#">About Us</Link>
                     </li>
                     <li>
-                        <Link href="#">[My Profile]</Link>
+                        <Link className="border-black border rounded p-3" href="#">[My Profile]</Link>
                     </li>
                     <li>
-                        <Link href="#">Cart</Link>
+                        <Link className="border-black border rounded p-3" href="#">Cart</Link>
                     </li>
                     <li>
-                        <button>Sign In/Sign out</button>
+                        <button><p className="border-black border rounded p-3">Sign In/Sign out</p></button>
                     </li>
                 </ul>
             </nav>
