@@ -1,26 +1,56 @@
+"use client";
 import React from "react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Nav() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const handleLogout = () => {
+        // Perform logout logic here
+        setIsLoggedIn(false);
+    };
+
+    const handleLogin = () => {
+        // Perform login logic here
+        setIsLoggedIn(true);
+    };
+
     return (
         <>
             <nav className="">
-                <ul className="flex justify-around flex-wrap gap-10 items-center">
-                    <li>
-                        <Link className="border-black border rounded p-3" href="/">Shop</Link>
+                <ul className="flex flex-wrap justify-around items-center ">
+                    <li className="mx-2">
+                        <Link className="hover:underline" href="/">
+                            Shop
+                        </Link>
                     </li>
-                    <li>
-                        <Link className="border-black border rounded p-3" href="#">About Us</Link>
+                    <li className="mx-2">
+                        <Link className="hover:underline" href="/">
+                            About Us
+                        </Link>
                     </li>
-                    <li>
-                        <Link className="border-black border rounded p-3" href="#">[My Profile]</Link>
+                    <li className="mx-2">
+                        <Link className="hover:underline" href="/">
+                            Cart
+                        </Link>
                     </li>
-                    <li>
-                        <Link className="border-black border rounded p-3" href="#">Cart</Link>
-                    </li>
-                    <li>
-                        <button><p className="border-black border rounded p-3">Sign In/Sign out</p></button>
-                    </li>
+                    {isLoggedIn ? (
+                        <>
+                            <li className="mx-2">
+                                <Link className="hover:underline" href="/">
+                                    My Profile
+                                </Link>
+                            </li>
+                            <li className="mx-2">
+                                <button onClick={handleLogout}>Logout</button>
+                            </li>
+                        </>
+                    ) : (
+                        <li className="mx-2">
+                            <button onClick={handleLogin}>Login</button>
+                        </li>
+                    )}
                 </ul>
             </nav>
         </>
