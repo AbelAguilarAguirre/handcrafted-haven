@@ -1,6 +1,7 @@
 'use client';
 
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ export default function LoginPage() {
           <h3>Your Home for Unique, Handcrafted Items</h3>
         </div>
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div>
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
@@ -36,7 +37,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email"
               />
             </div>
@@ -52,7 +53,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -84,15 +85,11 @@ export default function LoginPage() {
           </div>
           <div></div>
           <div className="text-sm text-center mt-4">
-            <span className="text-gray-400 p-1">
-              Are you new?
-            </span>
-            <a
-              href="#"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
+            <span className="text-gray-400 p-1">Are you new?</span>
+            <Link className="font-medium text-indigo-600 hover:text-indigo-500"
+              href={"/register"}>
               Create an Account
-            </a>
+            </Link>
           </div>
         </form>
       </div>
