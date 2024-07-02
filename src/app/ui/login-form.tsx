@@ -1,6 +1,7 @@
 export default function LoginForm() {
     return (
             <form className="flex flex-col gap-x-8 text-lg flex" >
+                <legend>Login To Your Account:</legend>
                 <input
                     id="email"
                     type="email"
