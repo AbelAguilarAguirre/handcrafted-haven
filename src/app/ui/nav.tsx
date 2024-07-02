@@ -48,7 +48,7 @@ export default function Nav() {
                         </>
                     ) : (
                         <li className="mx-2">
-                            <button onClick={handleLogin}>Login</button>
+                            <Link href="/login">Login</Link>
                         </li>
                     )}
                 </ul>
