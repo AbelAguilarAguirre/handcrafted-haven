@@ -48,7 +48,7 @@ export default function Nav() {
                         </>
                     ) : (
                         <li className="mx-2">
-                            <Link href="/login" >Login</Link>
+                            <Link href="/login">Login</Link>
                         </li>
                     )}
                 </ul>
