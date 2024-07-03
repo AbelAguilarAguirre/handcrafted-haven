@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function RegisterPage() {
+export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,7 +17,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center border-2 rounded-md pb-4 px-2 sm:px-6 lg:px-8 m-4 sm:mx-10">
+    <div className="flex items-center justify-center border-2 rounded-md pb-4 px-2 sm:px-6 lg:px-8 sm:mx-10">
       <div className="max-w-md w-full">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
