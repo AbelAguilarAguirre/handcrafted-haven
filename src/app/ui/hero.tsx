@@ -8,9 +8,10 @@ export default function Hero() {
         <Image
           src={"/hero.jpg"}
           alt="Art by Surene Palvie"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover"}}
           quality={100}
+          priority
         />
       </div>
       <div className="relative z-10 flex flex-col items-start justify-center h-full bg-black bg-opacity-50 text-white p-8 md:p-16 lg:p-24">

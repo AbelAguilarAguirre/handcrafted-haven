@@ -6,9 +6,13 @@ import Header from "./ui/header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Handcrafted Haven | Home",
-  description:
+  title: {
+    template: "Handcrafted Haven | %s",
+    default: "Handcrafted Haven",
+  },
+  description: 
     "Discover unique, handcrafted items and support talented artisans at Handcrafted Haven. Shop one-of-a-kind creations or sell your handmade products with ease.",
+  metadataBase: new URL("https://handcrafted-haven-beta.vercel.app"),
 };
 
 export default function RootLayout({
