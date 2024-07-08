@@ -1,24 +1,26 @@
+import { UUID } from "crypto";
+
 export type Product = {
-    id: number;
+    product_id: UUID;
     name: string;
     rating: number;
     price: number;
     description: string;
-    image: string;
-    user_id: number;
+    image_url: string;
+    user_id: UUID;
     created_at: Date;
     updated_at: Date;
 };
 
 
 export type ProductTable = {
-    id: number;
+    id: UUID;
     name: string;
     rating: number;
     price: number;
     description: string;
-    image: string;
-    user_id: number;
+    image_url: string;
+    user_id: UUID;
     created_at: Date;
     updated_at: Date;
 };
