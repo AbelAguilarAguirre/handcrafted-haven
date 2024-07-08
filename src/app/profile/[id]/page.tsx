@@ -1,16 +1,26 @@
 import ProductsTable from '@/app/ui/profile/table';
 import Pagination from '@/app/ui/profile/pagination';
 import { fetchProductsByUserId } from '@/app/lib/data';
+import { UUID } from 'crypto';
 
-export default async function Page({ params }: { params: { id: string } }) {
+
+export default async function Page({ params }: { params: { id: UUID } }) {
     const id = params.id;
-    const products = await fetchProductsByUserId(id);
-    return (
-        <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
-            <ProductsTable products={products} />
-            <div className="mt-5 flex w-full justify-center">
-                <Pagination totalPages={1} />
+    try {
+        const products = await fetchProductsByUserId(id);
+        return (
+            <div className="flex flex-col items-center min-h-[70vh]">
+                <div>
+                    <div>
+                        <ProductsTable products={products ?? []} />
+                    </div>
+                </div>
+                <div className=" mt-7 mb-2 flex w-full justify-center">
+                    <Pagination totalPages={1} />
+                </div>
             </div>
-        </div>
-    );
+        );
+    } catch (error) {
+        console.error("Database error:", error);
+    }
 }

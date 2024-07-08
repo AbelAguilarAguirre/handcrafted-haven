@@ -10,12 +10,13 @@ import { Product } from "../lib/definitions";
 
 export function ProfileProductCard({ product }: { product: Product}) {
     return (
-        <div className="border-2 border-slate-200 p-4 w-[212px] h-[300px] md:h-[400px]">
+        <div className="border-2 p-4 w-[212px] h-[300px] md:h-[400px] rounded-md overflow-hidden">
             <Image
-                src={product.image} // Update with actual data
-                width={180}
-                height={140}
+                src={product.image_url} // Update with actual data
+                width={80}
+                height={40}
                 alt={product.name}
+                className=" m-auto w-auto h-auto rounded-md md:w-40 md:h-40"
             />
             <div className="mt-2 flex justify-between">
                 <Rating
@@ -24,14 +25,23 @@ export function ProfileProductCard({ product }: { product: Product}) {
                     precision={0.5}
                     readOnly
                 />
-                <p>{product.price}</p>
+                <p>${product.price}</p>
             </div>
-            <p className="my-2 font-bold text-2xl text-center">
+            <p className="my-2 font-bold text-xl text-center">
                 {product.name}
             </p>
-            <p className="text-md line-clamp-2 md:line-clamp-6">
-                {product.description}
-            </p>
+            <div className="relative flex flex-col items-center group">
+                <p className="text-md line-clamp-2 md:line-clamp-4">
+                    {product.description}
+                </p>
+                <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
+                    <span className="relative z-10 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg rounded-md">
+                        {product.description}
+                    </span>
+                    <div className="w-3 h-3 -mt-2 rotate-45 bg-black"></div>
+                </div>
+            </div>
+            
         </div>
     );
 }
@@ -54,7 +64,7 @@ export function CartProductCard() {
                 </div>
                 {/* Update with actual data */}
                 <p className="text-sm md:text-md">Seller Name</p>
-                <p className="text-sm md:text-md line-clamp-2 md:line-clamp-2 max-w-[550px]">
+                <p className="text-sm md:text-md line-clamp-2 max-w-[550px]">
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                     Nisi voluptas deserunt optio sint quis aut ducimus maxime
                     vel suscipit ab aliquam esse, animi maiores! In vero ab
