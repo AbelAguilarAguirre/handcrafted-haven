@@ -1,6 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { ProductTable } from "./definitions";
 import { unstable_noStore as noStore } from "next/cache";
+import { UUID } from "crypto";
 
 const CARDS_PER_PAGE = 8;
 export async function fetchFilteredProducts(
@@ -57,23 +58,23 @@ export async function fetchProductsPages(query: string) {
     }
 }
 
-export async function fetchProductsByUserId(userId: string) {
+export async function fetchProductsByUserId(userId: UUID) {
     noStore();
     try {
         const products = await sql<ProductTable>`
             SELECT
-                products.id,
-                products.name,
-                products.rating,
-                products.price,
-                products.description,
-                products.image,
-                products.user_id,
-                products.created_at,
-                products.updated_at
-            FROM products
-            WHERE products.user_id = ${userId}
-            ORDER BY products.created_at DESC
+                product.product_id,
+                product.name,
+                product.rating,
+                product.price,
+                product.description,
+                product.image_url,
+                product.user_id,
+                product.created_at,
+                product.updated_at
+            FROM product
+            WHERE product.user_id = ${userId}
+            ORDER BY product.created_at DESC
         `;
         return products.rows;
     }
