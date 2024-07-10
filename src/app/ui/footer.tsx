@@ -24,7 +24,7 @@ export default function Footer() {
             </div>
             <div className='text-center py-4'>
                 <p>1234 Happy Street, Rexburg, ID 83460, USA</p>
-                <p>{`© ${current_year} HandcraftHaven/Group 5`}</p>
+                <p>{`© ${current_year} HandcraftHaven/Group 6`}</p>
             </div>
         </div>
     );
