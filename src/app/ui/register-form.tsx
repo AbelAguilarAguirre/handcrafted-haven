@@ -1,20 +1,15 @@
 'use client'
 
-import { useState } from "react";
+import { useFormState } from "react-dom";
 import Link from "next/link";
+import { createUser } from "@/app/lib/actions";
 
 export default function RegisterForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Confirm Password:", confirmPassword);
+  const initialState = {
+    message: null,
+    errors: {},
   };
+  const [state, dispatch] = useFormState(createUser, initialState);
 
   return (
     <div className="flex items-center justify-center border-2 rounded-md pb-4 px-2 sm:px-6 lg:px-8 sm:mx-10">
@@ -24,8 +19,21 @@ export default function RegisterForm() {
             Create Your Account
           </h2>
         </div>
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form action={dispatch} className="mt-8 space-y-6">
           <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="email-address" className="sr-only">
+                Full Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Full Name"
+              />
+            </div>
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
@@ -36,10 +44,8 @@ export default function RegisterForm() {
                 type="email"
                 autoComplete="email"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Email Address"
               />
             </div>
             <div>
@@ -52,8 +58,6 @@ export default function RegisterForm() {
                 type="password"
                 autoComplete="new-password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
@@ -68,14 +72,25 @@ export default function RegisterForm() {
                 type="password"
                 autoComplete="new-password"
                 required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Confirm Password"
               />
             </div>
           </div>
-
+          <div id="status-error" aria-live="polite" aria-atomic="true">
+            {state.errors && Object.entries(state.errors).map(([field, error]) => (
+              <p className="mt-2 text-sm text-red-500" key={field}>
+                {error}
+              </p>
+            ))}
+          </div>
+          <div id="form-error" aria-live="polite" aria-atomic="true">
+            {state.message && (
+              <p className="mt-2 text-sm text-red-500" key={state.message}>
+                {state.message}
+              </p>
+            )}
+          </div>
           <div>
             <button
               type="submit"
@@ -90,14 +105,12 @@ export default function RegisterForm() {
             <span className="border-b border-gray-300 flex-1"></span>
           </div>
           <div className="text-sm text-center mt-4">
-            <span className="text-gray-500 p-1">
-              Already have an account?
-            </span>
+            <span className="text-gray-500 p-1">Already have an account?</span>
             <Link
               href="/login"
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
-            Sign in
+              Sign in
             </Link>
           </div>
         </form>
