@@ -1,18 +1,65 @@
 'use client';
 
-import { useState } from "react";
+import { useFormState } from "react-dom";
+import { signIn } from 'next-auth/react';
 import Link from "next/link";
+import { z } from 'zod';
+import { redirect } from 'next/navigation';
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  type AuthenticateState = {
+    errors?: {
+        email?: string[];
+        password?: string[];
+    };
+    message?: string | null;
+  }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log("Email:", email);
-    console.log("Password:", password);
+  const AuthenticationSchema = z.object({
+    email: z.string().email({ message: "Invalid email address" }),
+    password: z.string().min(8, { message: "Password must be at least 8 characters long" })
+  });
+
+  async function authenticate(prevState: AuthenticateState, formData: FormData): Promise<AuthenticateState> {
+    const validatedFields = AuthenticationSchema.safeParse({
+      email: formData.get("email"),
+      password: formData.get("password")
+    });
+
+   if (!validatedFields.success) {
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+      };
+    }
+
+    const { email, password } = validatedFields.data;
+
+    const response = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (!response?.error) {
+      redirect('/');
+    }
+
+    if (response?.error === "CredentialsSignin") {
+      return {
+        message: "Invalid email or password."
+      }
+    }
+
+    return {
+      message: "Database error. Failed to log in.",
+    };
+  }
+
+  const initialState = {
+    message: null,
+    errors: {},
   };
+  const [state, dispatch] = useFormState(authenticate, initialState);
 
   return (
     <div className="flex items-center justify-center border-2 rounded-md pb-4 px-2 sm:px-6 lg:px-8 sm:mx-10">
@@ -23,7 +70,7 @@ export default function LoginForm() {
           </h2>
           <h3>Your Home for Unique, Handcrafted Items</h3>
         </div>
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form action={dispatch} className="mt-8 space-y-6">
           <div>
             <div>
               <label htmlFor="email-address" className="sr-only">
@@ -35,8 +82,6 @@ export default function LoginForm() {
                 type="email"
                 autoComplete="email"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email"
               />
@@ -51,8 +96,6 @@ export default function LoginForm() {
                 type="password"
                 autoComplete="current-password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
@@ -77,6 +120,20 @@ export default function LoginForm() {
             >
               Sign in
             </button>
+          </div>
+          <div id="status-error" aria-live="polite" aria-atomic="true">
+            {state.errors && Object.entries(state.errors).map(([field, error]) => (
+              <p className="mt-2 text-sm text-red-500" key={field}>
+                {error}
+              </p>
+            ))}
+          </div>
+          <div id="form-error" aria-live="polite" aria-atomic="true">
+            {state.message && (
+              <p className="mt-2 text-sm text-red-500" key={state.message}>
+                {state.message}
+              </p>
+            )}
           </div>
           <div className="flex items-center justify-between mt-6">
             <span className="border-b border-gray-300 flex-1"></span>
