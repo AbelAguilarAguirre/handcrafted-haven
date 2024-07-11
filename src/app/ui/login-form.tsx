@@ -9,8 +9,8 @@ import { redirect } from 'next/navigation';
 export default function LoginForm() {
   type AuthenticateState = {
     errors?: {
-        email?: string[];
-        password?: string[];
+      email?: string[];
+      password?: string[];
     };
     message?: string | null;
   }

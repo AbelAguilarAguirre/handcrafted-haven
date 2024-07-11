@@ -6,13 +6,13 @@ import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
 
 async function getUser(email: string): Promise<User | undefined> {
-    try {
-        const user = await sql<User>`SELECT * FROM "user" WHERE email=${email}`;
-        return user.rows[0];
-    } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
-    }
+  try {
+    const user = await sql<User>`SELECT * FROM "user" WHERE email=${email}`;
+    return user.rows[0];
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
 }
 
 const handler = NextAuth({
@@ -40,11 +40,11 @@ const handler = NextAuth({
             const passwordsMatch = await compare(password, user.password);
 
             if (passwordsMatch) {
-                return {
-                  name: user.name,
-                  email: user.email,
-                  id: user.user_id
-                };
+              return {
+                name: user.name,
+                email: user.email,
+                id: user.user_id
+              };
             }
         }
 
@@ -55,14 +55,14 @@ const handler = NextAuth({
   callbacks: {
     jwt({ token, user }) {
         if (user) {
-            token.sub = user.id;
+          token.sub = user.id;
         }
 
         return token;
     },
     session({ session, token }) {
         if (session) {
-            session.user.id = token.sub;
+          session.user.id = token.sub;
         }
 
         return session;
