@@ -1,5 +1,5 @@
-import { sql } from "@vercel/postgres";
-import { ProductTable } from "./definitions";
+import { sql} from "@vercel/postgres";
+import { ProductTable, Product } from "./definitions";
 import { unstable_noStore as noStore } from "next/cache";
 import { UUID } from "crypto";
 
@@ -77,6 +77,48 @@ export async function fetchProductsByUserId(userId: UUID) {
             ORDER BY product.created_at DESC
         `;
         return products.rows;
+    }
+    catch (error) {
+        console.error("Database error:", error);
+        throw new Error("An error occurred while fetching products");
+    }
+}
+
+export async function fetchProductByProductId(productId: UUID) {
+    noStore();
+    try {
+        const product = await sql<Product>`
+            SELECT
+                product.product_id,
+                product.name,
+                product.rating,
+                product.price,
+                product.description,
+                product.image_url,
+                product.user_id,
+                product.created_at,
+                product.updated_at
+            FROM product
+            WHERE product.product_id = ${productId}
+        `;
+        return product.rows[0];
+    }
+    catch (error) {
+        console.error("Database error:", error);
+        throw new Error("An error occurred while fetching products");
+    }
+}
+
+export async function getCartItemCount(userId: UUID) {
+    noStore();
+    try {
+        const count = await sql<{ count: number }>`
+            SELECT
+                COUNT(*)
+            FROM cart
+            WHERE cart.user_id = ${userId}
+        `;
+        return count.rows[0];
     }
     catch (error) {
         console.error("Database error:", error);
