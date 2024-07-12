@@ -1,20 +1,10 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { useState } from "react";
+import { signOut, useSession } from 'next-auth/react';
 
 export default function Nav() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    const handleLogout = () => {
-        // Perform logout logic here
-        setIsLoggedIn(false);
-    };
-
-    const handleLogin = () => {
-        // Perform login logic here
-        setIsLoggedIn(true);
-    };
+    const { data: session } = useSession();
 
     return (
         <>
@@ -35,21 +25,21 @@ export default function Nav() {
                             Cart
                         </Link>
                     </li>
-                    {isLoggedIn ? (
+                    {(session) ? (
                         <>
                             <li className="mx-2">
-                                <Link className="hover:underline" href="/">
-                                    My Profile
+                                <Link className="hover:underline" href={`/profile/${session?.user?.id}`} title="My Profile">
+                                    {session?.user?.name}
                                 </Link>
                             </li>
                             <li className="mx-2">
-                                <button onClick={handleLogout}>Logout</button>
+                                <button onClick={async () => signOut()}>Logout</button>
                             </li>
                         </>
                     ) : (
-                        <li className="mx-2">
-                            <Link href="/login">Login</Link>
-                        </li>
+                        <Link className="hover:underline" href="/login">
+                            Log In
+                        </Link>
                     )}
                 </ul>
             </nav>
