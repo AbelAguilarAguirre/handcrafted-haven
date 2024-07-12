@@ -7,6 +7,26 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Product } from "../lib/definitions";
+import Link from "next/link";
+
+export default function ProductCard({ product }: { product: Product }) {
+    return (
+      <Link
+        href={`/products/${product.product_id}`}
+        className="rounded-lg border border-gray-300 bg-[#feffea] p-6 text-center shadow-lg transition hover:scale-110 md:h-full"
+      >
+        <Image
+          src={product.image_url}
+          alt={product.name}
+          className="mx-auto w-full max-w-xs rounded-full"
+          height={200}
+          width={200}
+        />
+        <h3 className="mb-2 mt-6 text-lg font-semibold">{product.name}</h3>
+        <p className="mb-2 text-xl font-bold text-green-500">${product.price}</p>
+      </Link>
+    );
+  }
 
 export function ProfileProductCard({ product }: { product: Product}) {
     return (
