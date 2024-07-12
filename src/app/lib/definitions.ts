@@ -12,7 +12,6 @@ export type Product = {
     updated_at: Date;
 };
 
-
 export type ProductTable = {
     id: UUID;
     name: string;
@@ -24,3 +23,10 @@ export type ProductTable = {
     created_at: Date;
     updated_at: Date;
 };
+
+export type User = {
+    user_id: UUID;
+    name: string;
+    email: string;
+    password: string;
+}
