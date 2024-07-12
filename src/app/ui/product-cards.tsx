@@ -24,6 +24,7 @@ export default function ProductCard({ product }: { product: Product }) {
         />
         <h3 className="mb-2 mt-6 text-lg font-semibold">{product.name}</h3>
         <p className="mb-2 text-xl font-bold text-green-500">${product.price}</p>
+
       </Link>
     );
   }

@@ -1,4 +1,5 @@
 import ProductList from '../ui/shop/product-list';
+import ProductPriceFilter from '../ui/shop/product-price-filter';
 
 export default function Page() {
     return (
@@ -7,6 +8,7 @@ export default function Page() {
                 <h1 className="text-4xl font-bold text-center">Shop Page</h1>
             </div>
             <div className="flex flex-wrap justify-center gap-4">
+                <ProductPriceFilter maxPrice={'5000'} />
                 <ProductList maxPrice={'5000'} />
             </div>
         </>

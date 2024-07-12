@@ -12,4 +12,3 @@ export default async function ProductList({ maxPrice }: { maxPrice: string }) {
     </div>
   );
 }
-

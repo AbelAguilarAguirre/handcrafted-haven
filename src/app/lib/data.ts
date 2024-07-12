@@ -89,7 +89,7 @@ export async function fetchProducts(maxPrice: string = "5000") {
   
     try {
       const query = sql<Product>`
-        SELECT product.product_id, product.name, product.description, product.price, product.image_url
+        SELECT product.product_id, product.name, product.description, product.price, product.image_url, product.rating, product.user_id, product.created_at, product.updated_at
         FROM product
         JOIN user ON product.user_id = user.user_id
         WHERE products.price <= ${maxPrice}
