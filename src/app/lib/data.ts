@@ -43,12 +43,13 @@ export async function fetchProductsPages(query: string) {
     noStore();
     try {
         const count = await sql`SELECT COUNT(*) 
-            FROM products
+            FROM product
             WHERE
-                products.name ILIKE ${`%${query}%`} OR
-                products.description ILIKE ${`%${query}%`} OR
-                products.price::text ILIKE ${`%${query}%`} OR
-                products.rating::text ILIKE ${`%${query}%`}
+                product.name ILIKE ${`%${query}%`} OR
+                product.description ILIKE ${`%${query}%`} OR
+                product.price::text ILIKE ${`%${query}%`} OR
+                product.rating::text ILIKE ${`%${query}%`} OR
+                product.user_id = ${query}
         `;
         const totalPages = Math.ceil(Number(count.rows[0].count) / CARDS_PER_PAGE);
         return totalPages;
