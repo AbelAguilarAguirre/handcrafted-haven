@@ -1,6 +1,6 @@
-import Link from "next/link";
 'use client';
 
+import Link from "next/link";
 import { ProfileProductCard } from "../product-cards";
 import { UUID } from 'crypto';
 import { useSession } from 'next-auth/react';
