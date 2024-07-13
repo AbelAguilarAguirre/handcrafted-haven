@@ -1,5 +1,7 @@
+'use server';
+
 import { sql} from "@vercel/postgres";
-import { ProductTable, Product } from "./definitions";
+import { Product, CartItem } from "./definitions";
 import { unstable_noStore as noStore } from "next/cache";
 import { UUID } from "crypto";
 
@@ -12,23 +14,23 @@ export async function fetchFilteredProducts(
     const offset = (currentPage - 1) * CARDS_PER_PAGE;
 
     try {
-        const products = await sql<ProductTable>`
+        const products = await sql<Product>`
             SELECT
-                products.id,
-                products.name,
-                products.rating,
-                products.price,
-                products.description,
-                products.image,
-                products.user_id,
-                products.created_at,
-                products.updated_at
-            FROM products
+                product.product_id,
+                product.name,
+                product.rating,
+                product.price,
+                product.description,
+                product.image_url,
+                product.user_id,
+                product.created_at,
+                product.updated_at
+            FROM product
             WHERE
-                products.name ILIKE ${`%${query}%`} OR
-                products.description ILIKE ${`%${query}%`} OR
-                products.price::text ILIKE ${`%${query}%`} OR
-                products.rating::text ILIKE ${`%${query}%`}
+                product.name ILIKE ${`%${query}%`} OR
+                product.description ILIKE ${`%${query}%`} OR
+                product.price::text ILIKE ${`%${query}%`} OR
+                product.rating::text ILIKE ${`%${query}%`}
             ORDER BY products.created_at DESC
             LIMIT ${CARDS_PER_PAGE} OFFSET ${offset}
         `;
@@ -43,12 +45,12 @@ export async function fetchProductsPages(query: string) {
     noStore();
     try {
         const count = await sql`SELECT COUNT(*) 
-            FROM products
+            FROM product
             WHERE
-                products.name ILIKE ${`%${query}%`} OR
-                products.description ILIKE ${`%${query}%`} OR
-                products.price::text ILIKE ${`%${query}%`} OR
-                products.rating::text ILIKE ${`%${query}%`}
+                product.name ILIKE ${`%${query}%`} OR
+                product.description ILIKE ${`%${query}%`} OR
+                product.price::text ILIKE ${`%${query}%`} OR
+                product.rating::text ILIKE ${`%${query}%`}
         `;
         const totalPages = Math.ceil(Number(count.rows[0].count) / CARDS_PER_PAGE);
         return totalPages;
@@ -61,7 +63,7 @@ export async function fetchProductsPages(query: string) {
 export async function fetchProductsByUserId(userId: UUID) {
     noStore();
     try {
-        const products = await sql<ProductTable>`
+        const products = await sql<Product>`
             SELECT
                 product.product_id,
                 product.name,
@@ -109,19 +111,47 @@ export async function fetchProductByProductId(productId: UUID) {
     }
 }
 
-export async function getCartItemCount(userId: UUID) {
+export async function getCartItemCount(userId: UUID): Promise<number> {
     noStore();
     try {
-        const count = await sql<{ count: number }>`
-            SELECT
-                COUNT(*)
-            FROM cart
-            WHERE cart.user_id = ${userId}
+        const result = await sql`
+        SELECT SUM(cart_item.quantity) AS count
+        FROM cart_item
+        JOIN cart ON cart_item.cart_id = cart.cart_id
+        WHERE cart.user_id = ${userId}
         `;
-        return count.rows[0];
+        return result.rows[0].count || 0;
     }
     catch (error) {
         console.error("Database error:", error);
-        throw new Error("An error occurred while fetching products");
+        throw new Error("An error occurred while fetching the cart item count");
+    }
+}
+
+export async function getCartItemsByUserId(userId: UUID) {
+    noStore();
+    try {
+        const cartItems = await sql<CartItem>`
+            SELECT
+                cart_item.cart_item_id,
+                cart_item.cart_id,
+                cart_item.product_id,
+                cart_item.quantity,
+                cart_item.created_at,
+                cart_item.updated_at,
+                product.name,
+                product.price,
+                product.description,
+                product.image_url
+            FROM cart_item
+            JOIN cart ON cart_item.cart_id = cart.cart_id
+            JOIN product ON cart_item.product_id = product.product_id
+            WHERE cart.user_id = ${userId}
+        `;
+        return cartItems.rows;
+    }
+    catch (error) {
+        console.error("Database error:", error);
+        throw new Error("An error occurred while fetching cart items");
     }
 }
