@@ -6,9 +6,9 @@ import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: "Product Details",
+  title: "Profile",
   description:
-    "Login to your Handcrafted Haven account to start buying and selling unique, handcrafted items.",
+    "Your Handcrafted Haven profile where you can start buying and selling unique, handcrafted items.",
 };
 
 
@@ -25,7 +25,9 @@ export default async function Page({ params }: { params: { id: UUID } }) {
             <div className="flex flex-col items-center min-h-[70vh]">
                 {/* Add profile bio here */}
                 <div>
+
                     <ProductsTable products={products ?? []} params={params} totalPages={totalPages}/>
+
                 </div>
             </div>
         );

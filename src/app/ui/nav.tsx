@@ -36,7 +36,7 @@ export default function Nav() {
             </Link>
           </li>
           <li className="mx-2">
-            <Link className="hover:underline" href="/">
+            <Link className="hover:underline" href="/about">
               About Us
             </Link>
           </li>

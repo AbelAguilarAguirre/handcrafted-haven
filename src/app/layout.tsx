@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./ui/globals.css";
 import Header from "./ui/header";
+import Footer from "./ui/footer";
 import { getServerSession } from 'next-auth';
 import SessionProvider from '@/app/SessionProvider';
 import { CartProvider } from "@/app/CartContext";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,12 +30,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+
         <SessionProvider session={session}>
           <CartProvider>
             <Header />
             {children}
+            <Footer / >
           </CartProvider>
         </SessionProvider>
+
       </body>
     </html>
   );
