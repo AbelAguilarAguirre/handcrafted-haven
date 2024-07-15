@@ -50,7 +50,8 @@ export async function fetchProductsPages(query: string) {
                 product.name ILIKE ${`%${query}%`} OR
                 product.description ILIKE ${`%${query}%`} OR
                 product.price::text ILIKE ${`%${query}%`} OR
-                product.rating::text ILIKE ${`%${query}%`}
+                product.rating::text ILIKE ${`%${query}%`} OR
+                product.user_id = ${query}
         `;
         const totalPages = Math.ceil(Number(count.rows[0].count) / CARDS_PER_PAGE);
         return totalPages;
