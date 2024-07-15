@@ -1,24 +1,33 @@
 import ProductsTable from '@/app/ui/profile/table';
-import Pagination from '@/app/ui/profile/pagination';
-import { fetchProductsByUserId } from '@/app/lib/data';
+import { fetchProductsByUserId, fetchProductsPages } from '@/app/lib/data';
 import { UUID } from 'crypto';
+import { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: "Profile",
+  description:
+    "Your Handcrafted Haven profile where you can start buying and selling unique, handcrafted items.",
+};
 
 
 export default async function Page({ params }: { params: { id: UUID } }) {
+    const session = await getServerSession();
+    if (!session) {
+        redirect("/login");
+    }
     const id = params.id;
     try {
         const products = await fetchProductsByUserId(id);
+        const totalPages = await fetchProductsPages(id);
         return (
             <div className="flex flex-col items-center min-h-[70vh]">
+                {/* Add profile bio here */}
                 <div>
-                    <div>
-                    </div>
-                    <div>
-                        <ProductsTable products={products ?? []} />
-                    </div>
-                </div>
-                <div className=" mt-7 mb-2 flex w-full justify-center">
-                    <Pagination totalPages={1} />
+
+                    <ProductsTable products={products ?? []} params={params} totalPages={totalPages}/>
+
                 </div>
             </div>
         );

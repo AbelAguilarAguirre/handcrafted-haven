@@ -3,6 +3,10 @@ import { Inter } from "next/font/google";
 import "./ui/globals.css";
 import Header from "./ui/header";
 import Footer from "./ui/footer";
+import { getServerSession } from 'next-auth';
+import SessionProvider from '@/app/SessionProvider';
+import { CartProvider } from "@/app/CartContext";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,17 +20,25 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://handcrafted-haven-beta.vercel.app"),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession();
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        {children}
-        <Footer />
+
+        <SessionProvider session={session}>
+          <CartProvider>
+            <Header />
+            {children}
+            <Footer / >
+          </CartProvider>
+        </SessionProvider>
+
       </body>
     </html>
   );
