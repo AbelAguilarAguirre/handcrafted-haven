@@ -2,11 +2,11 @@ import Testimonial from '../ui/testimonial';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Register",
-    description: "Register for an account at Handcrafted Haven to start buying and selling unique, handcrafted items.",
+    title: "Testimonials",
+    description: "Read what our customers have to say about us at Handcrafted Haven.",
 };
 
-export default function RegisterPage() {
+export default function TestimonialPage() {
     return (
         <div className="container pb-8 px-8 mx-auto text-center">
             <Testimonial />

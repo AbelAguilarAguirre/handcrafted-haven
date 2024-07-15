@@ -12,6 +12,8 @@ export default async function Page({ params }: { params: { id: UUID } }) {
             <div className="flex flex-col items-center min-h-[70vh]">
                 <div>
                     <div>
+                    </div>
+                    <div>
                         <ProductsTable products={products ?? []} />
                     </div>
                 </div>
