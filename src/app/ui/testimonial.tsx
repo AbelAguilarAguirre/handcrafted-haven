@@ -9,13 +9,16 @@ export default function Testimonial() {
             Read what our customers think...
           </h2>
           <p className="text-gray-600 mb-4">
-            "Handcrafted Haven is a great place to find unique items by artists from all over!"
+            &quot;Handcrafted Haven is a great place to find unique items by
+            artists from all over!&quot;
           </p>
           <p className="text-gray-600 mb-4">
-            "I have really enjoyed shopping for my home on Handcrafted Haven!"
+            &quot;I have really enjoyed shopping for my home on Handcrafted
+            Haven!&quot;
           </p>
           <p className="text-gray-600 mb-4">
-            "You have to experience Handcrafted Haven! You won't be disappointed!"
+            &quot;You have to experience Handcrafted Haven! You won&apos;t be
+            disappointed!&quot;
           </p>
         </div>
         <div className="w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
