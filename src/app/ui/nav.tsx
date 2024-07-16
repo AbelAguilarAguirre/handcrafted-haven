@@ -25,7 +25,7 @@ export default function Nav() {
         };
 
         updateCount();
-      }, [session]);
+      }, [session, updateCartItemCount]);
   return (
     <>
       <nav className="">
