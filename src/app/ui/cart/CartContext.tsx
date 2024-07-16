@@ -1,8 +1,8 @@
 'use client';
 import { UUID } from 'crypto';
-import { CartItem } from './lib/definitions';
+import { CartItem } from '@/app/lib/definitions';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { removeFromCart, removeOneFromCart, addToCart } from './lib/actions';
+import { removeFromCart, removeOneFromCart, addToCart } from '@/app/lib/actions';
 
 interface CartContextType {
     cartItemsCopy: CartItem[];
