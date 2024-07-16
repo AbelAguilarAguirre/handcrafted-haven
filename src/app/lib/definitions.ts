@@ -17,6 +17,10 @@ export type User = {
     name: string;
     email: string;
     password: string;
+    image_url: string;
+    bio: string;
+    created_at: Date;
+    updated_at: Date;
 };
 
 export type CartItem = {
@@ -30,5 +34,16 @@ export type CartItem = {
     name: string;
     price: number;
     description: string;
+    image_url: string;
+};
+
+export type Review = {
+    review_id: UUID;
+    title: string;
+    review: string;
+    rating: number;
+    user_id: UUID
+    created_at: Date;
+    name: string;
     image_url: string;
 };
