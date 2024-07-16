@@ -1,4 +1,4 @@
-import { useCart } from "@/app/CartContext";
+import { useCart } from "@/app/ui/cart/CartContext";
 import { useEffect, useState } from "react";
 
 

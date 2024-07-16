@@ -5,7 +5,7 @@ import Header from "./ui/header";
 import Footer from "./ui/footer";
 import { getServerSession } from 'next-auth';
 import SessionProvider from '@/app/SessionProvider';
-import { CartProvider } from "@/app/CartContext";
+import { CartProvider } from "@/app/ui/cart/CartContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,7 +35,7 @@ export default async function RootLayout({
           <CartProvider>
             <Header />
             {children}
-            <Footer / >
+            <Footer />
           </CartProvider>
         </SessionProvider>
 

@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Cart from "./cart";
 import { signOut, useSession } from 'next-auth/react';
-import { useCart } from "@/app/CartContext";
+import { useCart } from "@/app/ui/cart/CartContext";
 import { useEffect } from "react";
 import { getCartItemCount } from "@/app/lib/data";
 
