@@ -57,14 +57,14 @@ export default function ReviewForm({ product_id }: { product_id: UUID }) {
           {showForm ? "Close Form" : "Add New Review"}
         </button>) : (
           <>
-            <span className="mr-4 font-bold">You must be logged in to add a review!</span>
+            <p className="mt-4">You must be logged in to add a review!</p>
             <button
               onClick={() => window.open('/login')}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Log In
             </button>
-            <span className=" font-bold mx-4">or</span>
+            <span className="mx-4">or</span>
             <button
               onClick={() => window.open('/register')}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
