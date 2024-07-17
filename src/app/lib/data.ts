@@ -1,7 +1,7 @@
 'use server';
 
 import { sql} from "@vercel/postgres";
-import { Product, CartItem } from "./definitions";
+import { Product, CartItem, User, Profile } from "./definitions";
 import { unstable_noStore as noStore } from "next/cache";
 import { UUID } from "crypto";
 
@@ -154,5 +154,31 @@ export async function getCartItemsByUserId(userId: UUID) {
     catch (error) {
         console.error("Database error:", error);
         throw new Error("An error occurred while fetching cart items");
+    }
+}
+
+export async function fetchProfileByUserId(userId: UUID) {
+    noStore();
+    try {
+        const profile = await sql<Profile>`
+            SELECT
+                profile.user_id,
+                profile.product_id,
+                profile.firstname,
+                profile.lastname,
+                profile.description,
+                profile.rating,
+                profile.join_date,
+                profile.email,
+                profile.image_url
+            FROM profile
+            WHERE profile.user_id = ${userId}
+            ORDER BY profile.join_date
+        `;
+        return profile.rows;
+    }
+    catch (error) {
+        console.error("Database error:", error);
+        throw new Error("An error occurred while fetching Profile");
     }
 }

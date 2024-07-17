@@ -32,3 +32,15 @@ export type CartItem = {
     description: string;
     image_url: string;
 };
+
+export type Profile = {
+    user_id: UUID;
+    product_id: UUID;
+    firstname: string;
+    lastname: string;
+    description: string;
+    rating: number;
+    join_date: Date;
+    email: string;
+    image_url: string;
+}
