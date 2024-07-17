@@ -7,6 +7,7 @@ import { UUID } from "crypto";
 import TextField from "@mui/material/TextField";
 import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
+import Link from "next/link";
 
 export default function ReviewForm({ product_id }: { product_id: UUID }) {
   const [showForm, setShowForm] = useState(false);
@@ -50,12 +51,30 @@ export default function ReviewForm({ product_id }: { product_id: UUID }) {
     <>
       <div id="reviews" className="text-center mb-12">
         <h2 className="text-3xl font-bold">Customer Reviews</h2>
-        <button
+        {session ? (<button
           onClick={() => setShowForm(!showForm)}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           {showForm ? "Close Form" : "Add New Review"}
-        </button>
+        </button>) : (
+          <>
+            <span className="mr-4 font-bold">You must be logged in to add a review!</span>
+            <button
+              onClick={() => window.open('/login')}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Log In
+            </button>
+            <span className=" font-bold mx-4">or</span>
+            <button
+              onClick={() => window.open('/register')}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Create an Account
+            </button>
+          </>
+        )}
+        
       </div>
       {showForm && (
         <div className="mb-6 p-4 bg-gray-100 rounded shadow-md space-y-4">
