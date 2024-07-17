@@ -7,6 +7,7 @@ import { UUID } from "crypto";
 import TextField from "@mui/material/TextField";
 import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
+import Link from "next/link";
 
 export default function ReviewForm({ product_id }: { product_id: UUID }) {
   const [showForm, setShowForm] = useState(false);
@@ -57,20 +58,23 @@ export default function ReviewForm({ product_id }: { product_id: UUID }) {
           {showForm ? "Close Form" : "Add New Review"}
         </button>) : (
           <>
-            <p className="mt-4">You must be logged in to add a review!</p>
-            <button
-              onClick={() => window.open('/login')}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Log In
-            </button>
-            <span className="mx-4">or</span>
-            <button
-              onClick={() => window.open('/register')}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Create an Account
-            </button>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <p className="text-lg mb-4 font-semibold">You must be logged in to add a review!</p>
+              <div className="flex justify-center items-center space-x-4">
+                <Link 
+                href={"/login"}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
+                >
+                  Log In
+                </Link>
+                <span className="font-bold">or</span>
+                <Link href={"/register"}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 transition duration-300 ease-in-out"
+                >
+                  Create an Account
+                </Link>
+              </div>
+            </div>
           </>
         )}
         
