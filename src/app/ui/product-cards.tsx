@@ -11,7 +11,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Product } from "../lib/definitions";
 import { CartItem } from "../lib/definitions";
-import { useCart } from "@/app/CartContext";
+import { useCart } from "@/app/ui/cart/CartContext";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 

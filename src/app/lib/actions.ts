@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import { signIn } from 'next-auth/react';
 import { UUID } from 'crypto';
 import { unstable_noStore as noStore } from 'next/cache';
+import { Review } from './definitions';
 
 const RegistrationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -157,3 +158,51 @@ export async function removeOneFromCart(cart_item_id: UUID) {
     }
 }
 
+export async function addReview(title: string, review: string, rating: number, product_id: UUID, user_id: UUID) {
+    try {
+        const review_id = await sql `
+        INSERT INTO review (title, review, rating, product_id, user_id)
+        VALUES (${title}, ${review}, ${rating}, ${product_id}, ${user_id})
+        RETURNING review_id`;
+
+        const reviewReturn = await sql<Review> `
+        SELECT 
+        review.review_id, 
+        review.title, 
+        review.review, 
+        review.rating, 
+        review.user_id, 
+        review.created_at, 
+        "user".name, 
+        "user".image_url
+        FROM review
+        JOIN "user" ON review.user_id = "user".user_id
+        WHERE review_id = ${review_id.rows[0].review_id}`;
+        
+        return reviewReturn.rows[0];
+
+    } catch (error) {
+        console.error("Database error:", error);
+    }
+}
+
+export async function deleteReviewById(review_id: UUID) {
+    try {
+        await sql `
+        DELETE FROM review
+        WHERE review_id = ${review_id}`;
+    } catch (error) {
+        console.error("Database error:", error);
+    }
+}
+
+export async function updateReview(review_id: UUID, title: string, review: string, rating: number) {
+    try {
+        await sql `
+        UPDATE review
+        SET title = ${title}, review = ${review}, rating = ${rating}, updated_at = NOW()
+        WHERE review_id = ${review_id}`;
+    } catch (error) {
+        console.error("Database error:", error);
+    }
+}

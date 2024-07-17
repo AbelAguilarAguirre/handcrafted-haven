@@ -3,7 +3,7 @@
 import { CartProductCard } from "../product-cards";
 import { CartItem } from "@/app/lib/definitions";
 import CartSummary from "./summary";
-import { useCart } from "@/app/CartContext";
+import { useCart } from "@/app/ui/cart/CartContext";
 
 export default function CartTable({cartItems}: { cartItems: CartItem[] }) {
     const { cartItemsCopy } = useCart();

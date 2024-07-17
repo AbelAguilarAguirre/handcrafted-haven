@@ -1,7 +1,7 @@
 'use server';
 
 import { sql} from "@vercel/postgres";
-import { Product, CartItem } from "./definitions";
+import { Product, CartItem, Review } from "./definitions";
 import { unstable_noStore as noStore } from "next/cache";
 import { UUID } from "crypto";
 
@@ -154,5 +154,32 @@ export async function getCartItemsByUserId(userId: UUID) {
     catch (error) {
         console.error("Database error:", error);
         throw new Error("An error occurred while fetching cart items");
+    }
+}
+
+export async function getReviewsById(product_id: UUID) {
+    noStore();
+    try {
+        const reviews = await sql<Review>`
+            SELECT
+                review.review_id,
+                review.title,
+                review.review,
+                review.rating,
+                review.user_id,
+                review.created_at,
+                "user".name,
+                "user".image_url
+            FROM review
+            LEFT JOIN "user"
+            ON review.user_id = "user".user_id
+            WHERE review.product_id = ${product_id}
+            ORDER BY review.created_at DESC
+        `;
+        return reviews.rows;
+    }
+    catch (error) {
+        console.error("Database error:", error);
+        throw new Error("An error occurred while fetching reviews");
     }
 }
