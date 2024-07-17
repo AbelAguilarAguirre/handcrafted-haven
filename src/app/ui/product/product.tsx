@@ -53,16 +53,23 @@ export function ProductDetails({ product }: { product: Product }) {
         </div>
         <div className="w-full md:w-1/2">
           <h1 className="text-3xl font-bold my-2">{product.name}</h1>
-          <div className="flex text-xl">
-            <Link
-            href={"#reviews"}
-            >
-              <Rating size="medium" value={rating} precision={0.5} readOnly />
-            </Link>
-            <p className="ml-2">({rating.toFixed(1)})</p>
-            
+          <div className="flex items-center justify-between text-xl">
+            <div className="flex items-center">
+              <Link href={"#reviews"}>
+                <Rating
+                  size="medium"
+                  value={rating}
+                  precision={0.5}
+                  readOnly
+                  className="pt-2 self-baseline"
+                />
+              </Link>
+              <p className="ml-2">({rating.toFixed(1)})</p>
+            </div>
+            <div className="flex items-center">
+              <p className="text-xl">${product.price}</p>
+            </div>
           </div>
-          <p className="text-xl my-2">${product.price}</p>
           <p className="my-2">{product.description}</p>
 
           <button
