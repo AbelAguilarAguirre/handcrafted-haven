@@ -21,7 +21,7 @@ export default function Nav() {
             <nav className="">
                 <ul className="flex flex-wrap justify-around items-center ">
                     <li className="mx-2">
-                        <Link className="hover:underline" href="/">
+                        <Link className="hover:underline" href="/shop">
                             Shop
                         </Link>
                     </li>
