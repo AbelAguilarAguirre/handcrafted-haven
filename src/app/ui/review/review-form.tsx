@@ -7,7 +7,6 @@ import { UUID } from "crypto";
 import TextField from "@mui/material/TextField";
 import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
-import Link from "next/link";
 
 export default function ReviewForm({ product_id }: { product_id: UUID }) {
   const [showForm, setShowForm] = useState(false);
