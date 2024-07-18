@@ -14,40 +14,17 @@ import { CartItem } from "../lib/definitions";
 import { useCart } from "@/app/ui/cart/CartContext";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 
-export default function ProductCard({ product }: { product: Product }) {
+
+export function ProductCard({ product }: { product: Product}) {
     return (
-      <Link
-        href={`/products/${product.product_id}`}
-        className="rounded-lg border border-gray-300 bg-[#feffea] p-6 text-center shadow-lg transition hover:scale-110 md:h-full"
-      >
-        <Image
-          src={product.image_url}
-          alt={product.name}
-          className="mx-auto w-full max-w-xs rounded-full"
-          height={200}
-          width={200}
-        />
-        <h3 className="mb-2 mt-6 text-lg font-semibold">{product.name}</h3>
-        <p className="mb-2 text-xl font-bold text-green-500">${product.price}</p>
-
-      </Link>
-    );
-  }
-
-
-
-
-export function ProfileProductCard({ product }: { product: Product}) {
-    return (
-        <div className="border-2 p-4 w-[212px] h-[300px] md:h-[400px] rounded-md overflow-hidden">
+        <div className="border-2 p-4 w-[70vw] h-auto sm:w-[212px] sm:h-[320px] md:h-[400px] rounded-md overflow-hidden">
             <Image
                 src={product.image_url}
                 width={80}
                 height={40}
                 alt={product.name}
-                className=" m-auto w-auto h-auto rounded-md md:w-40 md:h-40"
+                className=" m-auto w-40 h-40 sm:w-32 sm:h-32 rounded-md md:w-40 md:h-40"
             />
             <div className="mt-2 flex justify-between">
                 <Rating
@@ -55,8 +32,9 @@ export function ProfileProductCard({ product }: { product: Product}) {
                     defaultValue={product.rating}
                     precision={0.5}
                     readOnly
+                    className="m-2"
                 />
-                <p>${product.price}</p>
+                <p className="self-center">${product.price}</p>
             </div>
             <p className="my-2 font-bold text-xl text-center">
                 {product.name}

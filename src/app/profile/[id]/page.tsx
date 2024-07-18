@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: { id: UUID } }) {
                 {/* Add profile bio here */}
                 <div>
 
-                    <ProductsTable products={products ?? []} params={params} totalPages={totalPages}/>
+                    <ProductsTable products={products ?? []} params={params} totalPages={totalPages ?? 1}/>
 
                 </div>
             </div>

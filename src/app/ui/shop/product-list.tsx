@@ -1,14 +1,50 @@
-import React from 'react';
-import ProductCard from '../product-cards';
-import { fetchProducts } from '../../lib/data';
+"use client";
 
-export default async function ProductList({ maxPrice }: { maxPrice: string }) {
-  const products = await fetchProducts(maxPrice);
+import React, { useEffect, useState, useRef } from "react";
+import { ProductCard } from "../product-cards";
+import { fetchProducts } from "../../lib/data";
+import Pagination from "../profile/pagination";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Product } from "../../lib/definitions";
+
+interface ProductListProps {
+  maxPrice: number;
+  totalPages: number;
+}
+
+export default function ProductList({ maxPrice }: ProductListProps) {
+  const [products, setProducts] = useState<Product[] | undefined>([]);
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const PRODUCTS_PER_PAGE = 8;
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const fetchedProducts = await fetchProducts(maxPrice);
+      setProducts(fetchedProducts);
+      setTotalPages(
+        Math.ceil((fetchedProducts?.length ?? 1) / PRODUCTS_PER_PAGE)
+      );
+      const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+      const endIndex = startIndex + PRODUCTS_PER_PAGE;
+      setDisplayedProducts(fetchedProducts?.slice(startIndex, endIndex) ?? []);
+    };
+
+    getProducts();
+  }, [maxPrice, currentPage]);
+
   return (
-    <div className="grid grid-cols-1 gap-16 p-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-      {products.map((product) => (
-        <ProductCard key={product.product_id} product={product} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center">
+        {displayedProducts?.map((product) => (
+          <ProductCard key={product.product_id} product={product} />
+        ))}
+      </div>
+      <div className="mt-7 mb-2 text-center">
+        <Pagination totalPages={totalPages} />
+      </div>
+    </>
   );
 }

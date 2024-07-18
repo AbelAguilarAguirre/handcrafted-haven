@@ -64,7 +64,8 @@ export function ProductDetails({ product }: { product: Product }) {
                   className="pt-2 self-baseline"
                 />
               </Link>
-              <p className="ml-2">({rating.toFixed(1)})</p>
+              {rating > 0 && <p className="ml-2">({rating?.toFixed(1)})</p>}
+              
             </div>
             <div className="flex items-center">
               <p className="text-xl">${product.price}</p>
