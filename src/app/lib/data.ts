@@ -87,7 +87,7 @@ export async function fetchProductsByUserId(userId: UUID) {
     }
 }
 
-export async function fetchProducts(maxPrice: number = 1000) {
+export async function fetchProducts(maxPrice: number = 1000, searchQuery: string = "") {
     noStore();
   
     try {
@@ -103,7 +103,12 @@ export async function fetchProducts(maxPrice: number = 1000) {
             product.created_at, 
             product.updated_at
         FROM product
-        WHERE product.price <= ${maxPrice}
+        JOIN product_category ON product.product_id = product_category.product_id
+        JOIN category ON product_category.category_id = category.category_id
+        WHERE product.price <= ${maxPrice} AND 
+            (product.name ILIKE ${`%${searchQuery}%`} OR 
+            product.description ILIKE ${`%${searchQuery}%`} OR
+            category.name ILIKE ${`%${searchQuery}%`})
         ORDER BY product.price DESC;
       `;
   

@@ -9,20 +9,25 @@ import { Product } from "../../lib/definitions";
 
 interface ProductListProps {
   maxPrice: number;
+  searchQuery: string;
   totalPages: number;
 }
 
-export default function ProductList({ maxPrice }: ProductListProps) {
+export default function ProductList({
+  maxPrice,
+  searchQuery,
+}: ProductListProps) {
   const [products, setProducts] = useState<Product[] | undefined>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const PRODUCTS_PER_PAGE = 8;
   const searchParams = useSearchParams();
+  const router = useRouter();
   const currentPage = Number(searchParams.get("page")) || 1;
 
   useEffect(() => {
     const getProducts = async () => {
-      const fetchedProducts = await fetchProducts(maxPrice);
+      const fetchedProducts = await fetchProducts(maxPrice, searchQuery);
       setProducts(fetchedProducts);
       setTotalPages(
         Math.ceil((fetchedProducts?.length ?? 1) / PRODUCTS_PER_PAGE)
@@ -33,7 +38,7 @@ export default function ProductList({ maxPrice }: ProductListProps) {
     };
 
     getProducts();
-  }, [maxPrice, currentPage]);
+  }, [maxPrice, searchQuery, currentPage]);
 
   return (
     <>
