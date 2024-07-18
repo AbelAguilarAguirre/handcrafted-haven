@@ -1,7 +1,7 @@
 'use server';
 
 import { sql} from "@vercel/postgres";
-import { Product, CartItem, Review, ProductTable } from "./definitions";
+import { Product, CartItem, Review } from "./definitions";
 
 import { unstable_noStore as noStore } from "next/cache";
 import { UUID } from "crypto";
@@ -58,7 +58,6 @@ export async function fetchProductsPages(query: string) {
         return totalPages;
     } catch (error) {
         console.error("Database error:", error);
-        throw new Error("An error occurred while fetching products");
     }
 }
 
@@ -88,23 +87,29 @@ export async function fetchProductsByUserId(userId: UUID) {
     }
 }
 
-export async function fetchProducts(maxPrice: string = "5000") {
+export async function fetchProducts(maxPrice: number = 1000) {
     noStore();
   
     try {
-      const query = sql`
-        SELECT product.product_id, product.name, product.description, product.price, product.image_url, product.rating, product.user_id, product.created_at, product.updated_at
+      const products = await sql<Product>`
+        SELECT 
+            product.product_id, 
+            product.name, 
+            product.description, 
+            product.price, 
+            product.image_url, 
+            product.rating, 
+            product.user_id, 
+            product.created_at, 
+            product.updated_at
         FROM product
-        INNER JOIN "user" ON product.user_id = "user".user_id
-        WHERE product.price < ${maxPrice}
+        WHERE product.price <= ${maxPrice}
         ORDER BY product.price DESC;
       `;
   
-      const data = await query;
-      return data.rows;
+        return products.rows;
     } catch (error) {
       console.error('Database Error:', error);
-      throw new Error('Failed to fetch the products.');
     }
   }
 export async function fetchProductByProductId(productId: UUID) {
