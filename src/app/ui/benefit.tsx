@@ -23,7 +23,7 @@ export default function Benefit() {
         </div>
         <div className="w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
           <Image
-            src={"/benefit.jpg"}
+            src={"/images/benefit.jpg"}
             alt="Art by Yugixe"
             width={500}
             height={300}

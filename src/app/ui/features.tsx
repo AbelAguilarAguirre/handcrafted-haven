@@ -14,7 +14,7 @@ export default function Features() {
           <div className="w-full md:w-1/3 p-4">
             <div className="text-center p-6">
               <Image
-                src="/collection.svg"
+                src="/images/collection.svg"
                 width={48}
                 height={48}
                 className="mx-auto mb-4"
@@ -30,7 +30,7 @@ export default function Features() {
           <div className="w-full md:w-1/3 p-4">
             <div className="text-center p-6">
               <Image
-                src="/handshake.svg"
+                src="/images/handshake.svg"
                 width={48}
                 height={48}
                 className="mx-auto mb-4"
@@ -46,7 +46,7 @@ export default function Features() {
           <div className="w-full md:w-1/3 p-4">
             <div className="text-center p-6">
               <Image
-                src="/dollar.svg"
+                src="/images/dollar.svg"
                 width={48}
                 height={48}
                 className="mx-auto mb-4"
