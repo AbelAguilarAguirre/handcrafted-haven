@@ -219,6 +219,7 @@ export async function fetchUserById(userId: UUID) {
     try {
         const user = await sql<User>`
             SELECT
+                user_id,
                 name,
                 email,
                 image_url,

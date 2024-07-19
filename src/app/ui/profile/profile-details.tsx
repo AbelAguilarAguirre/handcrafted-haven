@@ -9,6 +9,7 @@ import ImageUploader from "@/app/ui/profile/ImageUploader";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import { updateProfile } from "@/app/lib/actions";
 
 export default function ProfileDetails({ user }: { user: User }) {
   const { data: session } = useSession();
@@ -39,15 +40,13 @@ export default function ProfileDetails({ user }: { user: User }) {
 
           const imageUrl = response.data.url;
           setProfileImage(imageUrl);
-          // Save other profile details like name and bio as well
-          // Make an API call to save the updated profile details
+          await updateProfile(user.user_id, profileName, imageUrl, profileBio);
         };
       } catch (error) {
         console.error("Error uploading image", error);
       }
     } else {
-      // Save other profile details like name and bio
-      // Make an API call to save the updated profile details
+      await updateProfile(user.user_id, profileName, profileImage, profileBio);
     }
 
     setIsEditing(false);

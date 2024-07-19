@@ -206,3 +206,14 @@ export async function updateReview(review_id: UUID, title: string, review: strin
         console.error("Database error:", error);
     }
 }
+
+export async function updateProfile(user_id: UUID, name: string, image_url: string, bio: string) {
+    try {
+        await sql `
+        UPDATE "user"
+        SET name = ${name}, image_url = ${image_url}, bio = ${bio}
+        WHERE user_id = ${user_id}`;
+    } catch (error) {
+        console.error("Database error:", error);
+    }
+}
