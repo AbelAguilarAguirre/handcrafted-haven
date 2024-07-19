@@ -1,5 +1,6 @@
 import ProductsTable from '@/app/ui/profile/table';
-import { fetchProductsByUserId, fetchProductsPages } from '@/app/lib/data';
+import ProfileDetails from '@/app/ui/profile/profile-details';
+import { fetchProductsByUserId, fetchProductsPages, fetchUserById } from '@/app/lib/data';
 import { UUID } from 'crypto';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
@@ -21,9 +22,10 @@ export default async function Page({ params }: { params: { id: UUID } }) {
     try {
         const products = await fetchProductsByUserId(id);
         const totalPages = await fetchProductsPages(id);
+        const user = await fetchUserById(id);
         return (
             <div className="flex flex-col items-center min-h-[70vh]">
-                {/* Add profile bio here */}
+                <ProfileDetails user={user}/>
                 <div>
 
                     <ProductsTable products={products ?? []} params={params} totalPages={totalPages ?? 1}/>

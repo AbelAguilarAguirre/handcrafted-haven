@@ -1,7 +1,7 @@
 'use server';
 
 import { sql} from "@vercel/postgres";
-import { Product, CartItem, Review } from "./definitions";
+import { Product, CartItem, Review, User } from "./definitions";
 
 import { unstable_noStore as noStore } from "next/cache";
 import { UUID } from "crypto";
@@ -211,5 +211,25 @@ export async function getReviewsById(product_id: UUID) {
     catch (error) {
         console.error("Database error:", error);
         throw new Error("An error occurred while fetching reviews");
+    }
+}
+
+export async function fetchUserById(userId: UUID) {
+    noStore();
+    try {
+        const user = await sql<User>`
+            SELECT
+                name,
+                email,
+                image_url,
+                bio
+            FROM "user"
+            WHERE user_id = ${userId}
+        `;
+        return user.rows[0];
+    }
+    catch (error) {
+        console.error("Database error:", error);
+        throw new Error("An error occurred while fetching user");
     }
 }
