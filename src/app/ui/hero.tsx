@@ -6,7 +6,7 @@ export default function Hero() {
     <div className="relative w-full h-screen">
       <div className="absolute inset-0">
         <Image
-          src={"/hero.jpg"}
+          src={"/images/hero.jpg"}
           alt="Art by Surene Palvie"
           fill
           style={{ objectFit: "cover"}}
@@ -25,7 +25,7 @@ export default function Hero() {
         </p>
         <div className="mt-8 flex space-x-4">
             <Link
-            href={"/"}>
+            href={"/shop"}>
                 <button className="px-6 py-2 bg-gray-800 rounded-full hover:bg-gray-700 transition">
                     Shop Now
                 </button>

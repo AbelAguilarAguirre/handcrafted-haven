@@ -16,15 +16,15 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 
 
-export function ProfileProductCard({ product }: { product: Product}) {
+export function ProductCard({ product }: { product: Product}) {
     return (
-        <div className="border-2 p-4 w-[212px] h-[300px] md:h-[400px] rounded-md overflow-hidden">
+        <div className="border-2 p-4 w-[70vw] h-auto sm:w-[212px] sm:h-[320px] md:h-[400px] rounded-md overflow-hidden">
             <Image
                 src={product.image_url}
                 width={80}
                 height={40}
                 alt={product.name}
-                className=" m-auto w-auto h-auto rounded-md md:w-40 md:h-40"
+                className=" m-auto w-40 h-40 sm:w-32 sm:h-32 rounded-md md:w-40 md:h-40"
             />
             <div className="mt-2 flex justify-between">
                 <Rating
@@ -32,8 +32,9 @@ export function ProfileProductCard({ product }: { product: Product}) {
                     defaultValue={product.rating}
                     precision={0.5}
                     readOnly
+                    className="m-2"
                 />
-                <p>${product.price}</p>
+                <p className="self-center">${product.price}</p>
             </div>
             <p className="my-2 font-bold text-xl text-center">
                 {product.name}

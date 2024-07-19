@@ -23,7 +23,7 @@ export default function Testimonial() {
         </div>
         <div className="w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
           <Image
-            src={"/testimonial.jpg"}
+            src={"/images/testimonial.jpg"}
             alt="Silhouettes of people jumping"
             width={500}
             height={300}
