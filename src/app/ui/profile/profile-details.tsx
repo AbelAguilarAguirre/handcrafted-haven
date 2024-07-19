@@ -83,17 +83,17 @@ export default function ProfileDetails({ user }: { user: User }) {
           </>
         ) : (
           <>
-            <div className="flex-col">
+            <div className="flex-col max-w-28">
               <Image
                 src={profileImage}
                 alt="Profile Picture"
                 width={96}
                 height={96}
-                className="rounded-full"
+                className="rounded-full m-auto"
               />
-              <h2 className="text-xl font-bold">{profileName}</h2>
+              <h2 className="text-xl font-bold text-center">{profileName}</h2>
             </div>
-            {session && (
+            {session?.user.id == user.user_id && (
               <button
                 className="text-gray-500 hover:text-gray-700 absolute top-[65px] left-[85px]"
                 onClick={() => setIsEditing(true)}

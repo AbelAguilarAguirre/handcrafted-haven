@@ -3,8 +3,6 @@ import ProfileDetails from '@/app/ui/profile/profile-details';
 import { fetchProductsByUserId, fetchProductsPages, fetchUserById } from '@/app/lib/data';
 import { UUID } from 'crypto';
 import { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -14,10 +12,6 @@ export const metadata: Metadata = {
 
 
 export default async function Page({ params }: { params: { id: UUID } }) {
-    const session = await getServerSession();
-    if (!session) {
-        redirect("/login");
-    }
     const id = params.id;
     try {
         const products = await fetchProductsByUserId(id);
