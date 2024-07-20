@@ -17,6 +17,9 @@ export type User = {
     name: string;
     email: string;
     password: string;
+    image_url: string;
+    bio: string;
+    created_at: Date;
 };
 
 export type CartItem = {
@@ -33,14 +36,3 @@ export type CartItem = {
     image_url: string;
 };
 
-export type Profile = {
-    user_id: UUID;
-    product_id: UUID;
-    firstname: string;
-    lastname: string;
-    description: string;
-    rating: number;
-    join_date: Date;
-    email: string;
-    image_url: string;
-}

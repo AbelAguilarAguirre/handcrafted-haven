@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: { id: UUID } }) {
         const profile = await fetchProfileByUserId(id);
         return (
             <div className="flex flex-col items-center min-h-[70vh]">
-                <ProfileDetails profile={profile} />
+                <ProfileDetails user={profile ?? []} />
                 <div>
 
                     <ProductsTable products={products ?? []} params={params} totalPages={totalPages}/>
