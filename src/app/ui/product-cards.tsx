@@ -37,7 +37,7 @@ export function ProductCard({ product }: { product: Product}) {
                     readOnly
                     className="m-2"
                 />
-                <p className="self-center">${product.price}</p>
+                <p className="self-center">${Number(product.price).toFixed(2)}</p>
             </div>
             <p className="my-2 font-bold text-xl text-center">
                 {product.name}

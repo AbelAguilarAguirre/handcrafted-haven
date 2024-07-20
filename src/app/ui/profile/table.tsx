@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductCard } from "../product-cards";
-import { UUID } from 'crypto';
-import { useSession } from 'next-auth/react';
-import Button from '@mui/material/Button';
-import Pagination from '@/app/ui/profile/pagination';
+import { UUID } from "crypto";
+import { useSession } from "next-auth/react";
+import Button from "@mui/material/Button";
+import Pagination from "@/app/ui/profile/pagination";
 import { Product } from "@/app/lib/definitions";
 import { useSearchParams } from "next/navigation";
-
-
+import ManageProductsModal from "./manage-products-modal";
+import EditProductModal from "./edit-product-modal";
 
 export default function ProductsTable({
   products,
@@ -26,21 +26,52 @@ export default function ProductsTable({
   const id = params.id;
   const { data: session } = useSession();
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+  const [manageModalOpen, setManageModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [productsList, setProductsList] = useState(products);
 
   const PRODUCTS_PER_PAGE = 8;
 
   useEffect(() => {
     const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
     const endIndex = startIndex + PRODUCTS_PER_PAGE;
-    setDisplayedProducts(products.slice(startIndex, endIndex));
-  }, [currentPage, products]);
+    setDisplayedProducts(productsList.slice(startIndex, endIndex));
+  }, [currentPage, productsList]);
+
+  const openManageModal = () => setManageModalOpen(true);
+  const closeManageModal = () => setManageModalOpen(false);
+
+  const openAddModal = () => setAddModalOpen(true);
+  const closeAddModal = () => setAddModalOpen(false);
+
+  const openDeleteModal = () => setDeleteModalOpen(true);
+  const closeDeleteModal = () => setDeleteModalOpen(false);
+
+  const openEditModal = () => setEditModalOpen(true);
+  const closeEditModal = () => setEditModalOpen(false);
+
+  const saveEditedProduct = (updatedProduct: Product) => {
+    setProductsList((prevProducts) =>
+      prevProducts.map((product) =>
+        product.product_id === updatedProduct.product_id
+          ? updatedProduct
+          : product
+      )
+    );
+  };
 
   return (
     <>
       <div className="flex justify-between mb-4 w-full">
         <h2 className="text-4xl font-bold mx-2">Products</h2>
         {session?.user.id === id && (
-          <Button variant="contained" href="#" className="mx-2">
+          <Button
+            variant="contained"
+            className="mx-2"
+            onClick={openManageModal}
+          >
             Manage Products
           </Button>
         )}
@@ -64,6 +95,19 @@ export default function ProductsTable({
       <div className="mt-7 mb-2 text-center">
         <Pagination totalPages={totalPages} />
       </div>
+      <ManageProductsModal
+        isOpen={manageModalOpen}
+        onClose={closeManageModal}
+        onAddProduct={openAddModal}
+        onEditProduct={openEditModal}
+        onDeleteProduct={openDeleteModal}
+      />
+      <EditProductModal
+        isOpen={editModalOpen}
+        onClose={closeEditModal}
+        products={productsList}
+        onSave={saveEditedProduct}
+      />
     </>
   );
 }

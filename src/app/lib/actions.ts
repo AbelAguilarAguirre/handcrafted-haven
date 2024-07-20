@@ -217,3 +217,14 @@ export async function updateProfile(user_id: UUID, name: string, image_url: stri
         console.error("Database error:", error);
     }
 }
+
+export async function updateProduct(product_id: UUID, price: number, description: string, name: string, image_url: string) {
+    try {
+        await sql `
+        UPDATE product
+        SET price = ${price}, description = ${description}, name = ${name}, image_url = ${image_url}
+        WHERE product_id = ${product_id}`;
+    } catch (error) {
+        console.error("Database error:", error);
+    }
+}
