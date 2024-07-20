@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Rating from "@mui/material/Rating";
 import Image from "next/image";
-import { Product } from "../../lib/definitions";
+import { Product, User } from "../../lib/definitions";
 import { addToCart } from "../../lib/actions";
 import { useSession } from "next-auth/react";
 import { UUID } from "crypto";
@@ -11,13 +11,21 @@ import { useCart } from "@/app/ui/cart/CartContext";
 import ReviewsTable from "../review/table";
 import { useReview } from "../review/ReviewContext";
 import Link from "next/link";
-import { getReviewsById } from "@/app/lib/data";
+import { getReviewsById, fetchUserById } from "@/app/lib/data";
 
 export function ProductDetails({ product }: { product: Product }) {
   const { data: session } = useSession();
   const { reviewCount } = useReview();
   const [rating, setRating] = useState(product.rating);
+
+  
+  const [user, setUser] = useState({
+    user_id: "",
+    name: "",
+    image_url: "",
+  });
   let user_id: UUID;
+  const prevReviewsRef = useRef<number>();
 
   if (session) {
     user_id = session.user.id;
@@ -35,9 +43,18 @@ export function ProductDetails({ product }: { product: Product }) {
       const averageRating = totalRating / reviews.length;
       setRating(averageRating);
     };
-  
-    fetchReviews();
-  }, [reviewCount]);
+    const fetchUser = async () => {
+      const user = await fetchUserById(product.user_id);
+      setUser(user);
+    }
+    if (prevReviewsRef.current !== reviewCount) {
+      prevReviewsRef.current = reviewCount;
+      fetchReviews();
+    }
+    else {
+      fetchUser();
+    }
+  }, [reviewCount, product.product_id]);
 
   return (
     <>
@@ -53,6 +70,19 @@ export function ProductDetails({ product }: { product: Product }) {
         </div>
         <div className="w-full md:w-1/2">
           <h1 className="text-3xl font-bold my-2">{product.name}</h1>
+          <Link
+            href={`/profile/${user.user_id}`}
+            className="flex items-center w-fit"
+          >
+            <Image
+              src={user.image_url}
+              alt="Artisan Image"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <p className="text-gray-500 ml-2">{user.name}</p>
+          </Link>
           <div className="flex items-center justify-between text-xl">
             <div className="flex items-center">
               <Link href={"#reviews"}>
@@ -65,7 +95,6 @@ export function ProductDetails({ product }: { product: Product }) {
                 />
               </Link>
               {rating > 0 && <p className="ml-2">({rating?.toFixed(1)})</p>}
-              
             </div>
             <div className="flex items-center">
               <p className="text-xl">${product.price}</p>
