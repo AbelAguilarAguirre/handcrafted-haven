@@ -75,7 +75,7 @@ export function ProductDetails({ product }: { product: Product }) {
             className="flex items-center w-fit"
           >
             <Image
-              src={user.image_url}
+              src={user.image_url?? "/images/default-avatar.jpeg"}
               alt="Artisan Image"
               width={40}
               height={40}

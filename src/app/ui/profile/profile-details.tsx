@@ -104,7 +104,7 @@ export default function ProfileDetails({ user }: { user: User }) {
             <div className="ml-4 flex-1">
               <div className="flex items-center justify-between"></div>
               <p className="m-2 text-gray-600">
-                {profileBio ?? "Edit your profile to add a bio."}
+                {profileBio ??  (session?.user.id == user.user_id ? "Edit your profile to add a bio." : "No bio available.")}
               </p>
             </div>
           </>

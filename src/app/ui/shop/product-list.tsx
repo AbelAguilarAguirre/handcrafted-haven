@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { ProductCard } from "../product-cards";
 import { fetchProducts } from "../../lib/data";
 import Pagination from "../profile/pagination";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Product } from "../../lib/definitions";
 
 interface ProductListProps {
@@ -22,7 +22,6 @@ export default function ProductList({
   const [totalPages, setTotalPages] = useState(1);
   const PRODUCTS_PER_PAGE = 8;
   const searchParams = useSearchParams();
-  const router = useRouter();
   const currentPage = Number(searchParams.get("page")) || 1;
 
   useEffect(() => {
