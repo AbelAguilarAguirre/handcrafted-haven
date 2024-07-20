@@ -11,6 +11,7 @@ import { Product } from "@/app/lib/definitions";
 import { useSearchParams } from "next/navigation";
 import ManageProductsModal from "./manage-products-modal";
 import EditProductModal from "./edit-product-modal";
+import AddProductModal from "./add-product-modal";
 
 export default function ProductsTable({
   products,
@@ -62,6 +63,10 @@ export default function ProductsTable({
     );
   };
 
+  const saveNewProduct = (newProduct: Product) => {
+    setProductsList((prevProducts) => [...prevProducts, newProduct]);
+  }
+
   return (
     <>
       <div className="flex justify-between mb-4 w-full">
@@ -107,6 +112,11 @@ export default function ProductsTable({
         onClose={closeEditModal}
         products={productsList}
         onSave={saveEditedProduct}
+      />
+      <AddProductModal
+        isOpen={addModalOpen}
+        onClose={closeAddModal}
+        onSave={saveNewProduct}
       />
     </>
   );

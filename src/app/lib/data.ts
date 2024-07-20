@@ -77,7 +77,7 @@ export async function fetchProductsByUserId(userId: UUID) {
                 product.updated_at
             FROM product
             WHERE product.user_id = ${userId}
-            ORDER BY product.created_at DESC
+            ORDER BY product.price DESC
         `;
         return products.rows;
     }

@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import { signIn } from 'next-auth/react';
 import { UUID } from 'crypto';
 import { unstable_noStore as noStore } from 'next/cache';
-import { Review } from './definitions';
+import { Review, Product } from './definitions';
 
 const RegistrationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -224,6 +224,29 @@ export async function updateProduct(product_id: UUID, price: number, description
         UPDATE product
         SET price = ${price}, description = ${description}, name = ${name}, image_url = ${image_url}
         WHERE product_id = ${product_id}`;
+    } catch (error) {
+        console.error("Database error:", error);
+    }
+}
+
+export async function addProduct(user_id: UUID, price: number, description: string, name: string, image_url: string) {
+    try {
+        const product = await sql<Product> `
+        INSERT INTO product (
+            user_id, 
+            price, 
+            description, 
+            name, 
+            image_url)
+        VALUES (
+        ${user_id}, 
+        ${price}, 
+        ${description}, 
+        ${name}, 
+        ${image_url})
+        RETURNING *`;
+
+        return product.rows[0];
     } catch (error) {
         console.error("Database error:", error);
     }
