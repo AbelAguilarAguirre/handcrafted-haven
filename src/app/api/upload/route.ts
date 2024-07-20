@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 
 cloudinary.config({
@@ -7,11 +7,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-interface UploadRequest {
-    json: () => Promise<{ file: string }>;
-}
-
-export async function POST(request: UploadRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
     const data = await request.json();
     const { file } = data;
 

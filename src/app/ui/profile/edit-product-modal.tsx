@@ -67,7 +67,16 @@ export default function EditProductModal({
           const imageUrl = response.data.url;
           setProductImage(imageUrl);
           if (selectedProductId) {
-            await updateProduct(selectedProductId, editedProduct?.price || 0, editedProduct?.description || "", editedProduct?.name || "", imageUrl);
+            const product = await updateProduct(
+              selectedProductId, 
+              editedProduct?.price || 0, 
+              editedProduct?.description || "", 
+              editedProduct?.name || "", 
+              imageUrl);
+            if (product) {
+              onSave(product);
+              onClose();
+            }
           }
         };
       } catch (error) {
@@ -75,19 +84,20 @@ export default function EditProductModal({
       }
     } else {
         if (selectedProductId) {
-            await updateProduct(
+            const product = await updateProduct(
               selectedProductId,
               editedProduct?.price || 0,
               editedProduct?.description || "",
               editedProduct?.name || "",
               productImage || ""
             );
+            if (product) {
+              onSave(product);
+              onClose();
+            }
         }
     }
-    if (editedProduct) {
-      onSave(editedProduct);
-      onClose();
-    }
+      
   };
 
   if (!isOpen) return null;

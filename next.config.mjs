@@ -3,11 +3,16 @@ import { env } from "process";
 //** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['res.cloudinary.com'],
         remotePatterns: [
             {
                 protocol: 'https',
                 hostname: 'placehold.co',
+                port: '',
+                pathname: '/**/**'
+            },
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
                 port: '',
                 pathname: '/**/**'
             }

@@ -220,10 +220,13 @@ export async function updateProfile(user_id: UUID, name: string, image_url: stri
 
 export async function updateProduct(product_id: UUID, price: number, description: string, name: string, image_url: string) {
     try {
-        await sql `
+        const product = await sql<Product> `
         UPDATE product
         SET price = ${price}, description = ${description}, name = ${name}, image_url = ${image_url}
-        WHERE product_id = ${product_id}`;
+        WHERE product_id = ${product_id}
+        RETURNING *`;
+
+        return product.rows[0];
     } catch (error) {
         console.error("Database error:", error);
     }
@@ -247,6 +250,16 @@ export async function addProduct(user_id: UUID, price: number, description: stri
         RETURNING *`;
 
         return product.rows[0];
+    } catch (error) {
+        console.error("Database error:", error);
+    }
+}
+
+export async function deleteProductById(product_id: UUID) {
+    try {
+        await sql `
+        DELETE FROM product
+        WHERE product_id = ${product_id}`;
     } catch (error) {
         console.error("Database error:", error);
     }
