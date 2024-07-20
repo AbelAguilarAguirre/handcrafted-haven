@@ -4,14 +4,13 @@ import { UUID } from 'crypto';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { ProfileDetails } from '@/app/ui/profile/profile';
+import { ProfileCard } from '@/app/ui/profile/profileCard';
 
 export const metadata: Metadata = {
   title: "Profile",
   description:
     "Your Handcrafted Haven profile where you can start buying and selling unique, handcrafted items.",
 };
-
 
 export default async function Page({ params }: { params: { id: UUID } }) {
     const session = await getServerSession();
@@ -25,7 +24,7 @@ export default async function Page({ params }: { params: { id: UUID } }) {
         const profile = await fetchProfileByUserId(id);
         return (
             <div className="flex flex-col items-center min-h-[70vh]">
-                <ProfileDetails user={profile ?? []} />
+                <ProfileCard profile={profile} />
                 <div>
 
                     <ProductsTable products={products ?? []} params={params} totalPages={totalPages}/>

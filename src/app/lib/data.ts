@@ -163,14 +163,15 @@ export async function fetchProfileByUserId(userId: UUID) {
         const user = await sql<User>`
             SELECT
                 user.user_id,
-                user.product_id,
                 user.name,
+                user.image_url,
                 user.bio,
+                user.created_at
             FROM user
             WHERE user.user_id = ${userId}
             ORDER BY user.created_at
         `;
-        return user.rows;
+        return user.rows[0];
     }
     catch (error) {
         console.error("Database error:", error);
