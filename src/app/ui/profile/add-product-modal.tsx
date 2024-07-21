@@ -79,7 +79,12 @@ export default function AddProductModal({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-auto">
       <div className="bg-white p-6 rounded shadow-lg w-96">
-        <h2 className="text-2xl mb-4">Add Product</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl">Add Product</h2>
+          <Button variant="outlined" color="error" onClick={onClose}>
+            Close
+          </Button>
+        </div>
         <form action={handleSave}>
           <TextField
               label="Title"
@@ -108,9 +113,6 @@ export default function AddProductModal({
             Save
           </Button>
         </form>
-        <Button variant="outlined" onClick={onClose} className="mt-4 ml-2">
-          Close
-        </Button>
       </div>
     </div>
   );

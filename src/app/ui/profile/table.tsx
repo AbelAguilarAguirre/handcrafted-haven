@@ -84,19 +84,19 @@ export default function ProductsTable({
 
   return (
     <>
-      <div className="flex justify-between mb-4 w-full">
-        <h2 className="text-4xl font-bold mx-2">Products</h2>
+      <div className="flex flex-col md:flex-row align-center justify-center md:justify-between mb-4 px-4 w-[80vw] mx-auto">
+        <h2 className="text-center md:text-start text-4xl font-bold">Products</h2>
         {session?.user.id === id && (
           <Button
             variant="contained"
-            className="mx-2"
+            className="mt-4 md:mt-0 mx-2"
             onClick={openManageModal}
           >
             Manage Products
           </Button>
         )}
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center">
+      <div className="p-4 flex flex-wrap justify-between gap-4 w-[80vw] mx-auto">
         {displayedProducts.map((product) => (
           <Link
             key={product.product_id}
