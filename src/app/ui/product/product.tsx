@@ -13,19 +13,13 @@ import { useReview } from "../review/ReviewContext";
 import Link from "next/link";
 import { getReviewsById, fetchUserById } from "@/app/lib/data";
 
-export function ProductDetails({ product }: { product: Product }) {
+export function ProductDetails({ product, user }: { product: Product, user: User }) {
   const { data: session } = useSession();
   const { reviewCount } = useReview();
   const [rating, setRating] = useState(product.rating);
 
   
-  const [user, setUser] = useState({
-    user_id: "",
-    name: "",
-    image_url: "",
-  });
   let user_id: UUID;
-  const prevReviewsRef = useRef<number>();
 
   if (session) {
     user_id = session.user.id;
@@ -43,18 +37,9 @@ export function ProductDetails({ product }: { product: Product }) {
       const averageRating = totalRating / reviews.length;
       setRating(averageRating);
     };
-    const fetchUser = async () => {
-      const user = await fetchUserById(product.user_id);
-      setUser(user);
-    }
-    if (prevReviewsRef.current !== reviewCount) {
-      prevReviewsRef.current = reviewCount;
-      fetchReviews();
-    }
-    else {
-      fetchUser();
-    }
-  }, [reviewCount, product.product_id]);
+
+    fetchReviews();
+  }, [reviewCount]);
 
   return (
     <>
