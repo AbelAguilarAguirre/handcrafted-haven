@@ -52,10 +52,10 @@ export default function EditProductModal({
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (formData: FormData) => {
+    const categories = formData.get('categories');
     if (imageFile) {
       try {
-        const formData = new FormData();
         formData.append("file", imageFile);
   
         const reader = new FileReader();
@@ -73,7 +73,8 @@ export default function EditProductModal({
               editedProduct?.price || 0, 
               editedProduct?.description || "", 
               editedProduct?.name || "", 
-              imageUrl);
+              imageUrl,
+              categories as string);
             if (product) {
               onSave(product);
               onClose();
@@ -90,7 +91,8 @@ export default function EditProductModal({
               editedProduct?.price || 0,
               editedProduct?.description || "",
               editedProduct?.name || "",
-              productImage || ""
+              productImage || "",
+              categories as string
             );
             if (product) {
               onSave(product);
@@ -119,7 +121,7 @@ export default function EditProductModal({
           ))}
         </Select>
         {editedProduct && (
-          <>
+          <form action={handleSave}>
             <TextField
               label="Title"
               name="name"
@@ -146,10 +148,10 @@ export default function EditProductModal({
             />
             <SelectCategories productId={editedProduct.product_id}/>
             <ImageUploader onUpload={handleFileSelect} />
-            <Button variant="contained" onClick={handleSave} className="mt-4">
+            <Button type='submit' variant="contained" className="mt-4">
               Save
             </Button>
-          </>
+          </form>
         )}
         <Button variant="outlined" onClick={onClose} className="mt-4 ml-2">
           Close

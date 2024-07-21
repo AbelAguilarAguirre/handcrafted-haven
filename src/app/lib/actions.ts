@@ -218,7 +218,9 @@ export async function updateProfile(user_id: UUID, name: string, image_url: stri
     }
 }
 
-export async function updateProduct(product_id: UUID, price: number, description: string, name: string, image_url: string) {
+export async function updateProduct(product_id: UUID, price: number, description: string, name: string, image_url: string, categories: string) {
+    const categoriesList = categories.split(',');
+
     try {
         const product = await sql<Product> `
         UPDATE product
@@ -226,13 +228,35 @@ export async function updateProduct(product_id: UUID, price: number, description
         WHERE product_id = ${product_id}
         RETURNING *`;
 
+         // Delete all previous categories for that product
+         await sql`
+            DELETE FROM "product_category"
+            WHERE product_id = ${product_id}
+        `;
+
+        categoriesList.forEach(async (category) => {
+            // Get category id
+            const result = await sql`
+            SELECT category_id
+            FROM "category"
+            WHERE name = ${category};
+            `; 
+            const categoryId = result.rows[0].category_id;
+    
+            // Set new categories
+            await sql`
+                INSERT INTO "product_category" (product_id, category_id)
+                VALUES (${product_id}, ${categoryId})
+            `;
+        });
+
         return product.rows[0];
     } catch (error) {
         console.error("Database error:", error);
     }
 }
 
-export async function addProduct(user_id: UUID, price: number, description: string, name: string, image_url: string) {
+export async function addProduct(user_id: UUID, price: number, description: string, name: string, image_url: string, categoriesList: string) {
     try {
         const product = await sql<Product> `
         INSERT INTO product (
