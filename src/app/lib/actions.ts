@@ -256,7 +256,8 @@ export async function updateProduct(product_id: UUID, price: number, description
     }
 }
 
-export async function addProduct(user_id: UUID, price: number, description: string, name: string, image_url: string, categoriesList: string) {
+export async function addProduct(user_id: UUID, price: number, description: string, name: string, image_url: string, categories: string) {
+    const categoriesList = categories.split(',');
     try {
         const product = await sql<Product> `
         INSERT INTO product (
@@ -272,6 +273,23 @@ export async function addProduct(user_id: UUID, price: number, description: stri
         ${name}, 
         ${image_url})
         RETURNING *`;
+
+        categoriesList.forEach(async (category) => {
+            // Get category id
+            const result = await sql`
+            SELECT category_id
+            FROM "category"
+            WHERE name = ${category};
+            `; 
+            const categoryId = result.rows[0].category_id;
+    
+            // Set new categories
+            await sql`
+                INSERT INTO "product_category" (product_id, category_id)
+                VALUES (${product.rows[0].product_id}, ${categoryId})
+            `;
+        });
+        console.log(product.rows[0])
 
         return product.rows[0];
     } catch (error) {

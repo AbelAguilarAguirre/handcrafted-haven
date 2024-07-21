@@ -40,10 +40,11 @@ export default function AddProductModal({
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (formData: FormData) => {
+    const categories = formData.get('categories');
+
     if (imageFile) {
       try {
-        const formData = new FormData();
         formData.append("file", imageFile);
 
         const reader = new FileReader();
@@ -59,7 +60,8 @@ export default function AddProductModal({
                 editedProduct?.price,
                 editedProduct?.description,
                 editedProduct?.name,
-                imageUrl
+                imageUrl,
+                categories as string
             );
             if (editedProduct && product) {
                 onSave(product);
@@ -78,32 +80,34 @@ export default function AddProductModal({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-auto">
       <div className="bg-white p-6 rounded shadow-lg w-96">
         <h2 className="text-2xl mb-4">Add Product</h2>
-        <TextField
-            label="Title"
-            name="name"
-            onChange={handleInputChange}
-            className="w-full mb-4"
-        />
-        <TextField
-            label="Price"
-            name="price"
-            type="number"
-            onChange={handleInputChange}
-            className="w-full mb-4"
-        />
-        <TextField
-            label="Description"
-            name="description"
-            onChange={handleInputChange}
-            multiline
-            rows={4}
-            className="w-full"
-        />
-        <SelectCategories productId="" />
-        <ImageUploader onUpload={handleFileSelect} />
-        <Button variant="contained" onClick={handleSave} className="mt-4">
-          Save
-        </Button>
+        <form action={handleSave}>
+          <TextField
+              label="Title"
+              name="name"
+              onChange={handleInputChange}
+              className="w-full mb-4"
+          />
+          <TextField
+              label="Price"
+              name="price"
+              type="number"
+              onChange={handleInputChange}
+              className="w-full mb-4"
+          />
+          <TextField
+              label="Description"
+              name="description"
+              onChange={handleInputChange}
+              multiline
+              rows={4}
+              className="w-full"
+          />
+          <SelectCategories productId="" />
+          <ImageUploader onUpload={handleFileSelect} />
+          <Button type='submit' variant="contained" className="mt-4">
+            Save
+          </Button>
+        </form>
         <Button variant="outlined" onClick={onClose} className="mt-4 ml-2">
           Close
         </Button>
