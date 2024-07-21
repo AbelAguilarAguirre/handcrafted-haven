@@ -18,6 +18,9 @@ import { useSession } from "next-auth/react";
 
 export function ProductCard({ product }: { product: Product}) {
     return (
+      <Link 
+      href={`/product/${product.product_id}`}
+      >
         <div className="border-2 p-4 w-[70vw] h-auto sm:w-[212px] sm:h-[320px] md:h-[400px] rounded-md overflow-hidden">
             <Image
                 src={product.image_url}
@@ -34,7 +37,7 @@ export function ProductCard({ product }: { product: Product}) {
                     readOnly
                     className="m-2"
                 />
-                <p className="self-center">${product.price}</p>
+                <p className="self-center">${Number(product.price).toFixed(2)}</p>
             </div>
             <p className="my-2 font-bold text-xl text-center">
                 {product.name}
@@ -52,6 +55,7 @@ export function ProductCard({ product }: { product: Product}) {
             </div>
             
         </div>
+      </Link>
     );
 }
 
