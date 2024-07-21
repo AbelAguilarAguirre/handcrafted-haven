@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import ImageUploader from "@/app/ui/profile/ImageUploader";
+import SelectCategories from "./select-categories";
 import { Product } from "@/app/lib/definitions";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { updateProduct } from "@/app/lib/actions";
@@ -140,9 +141,10 @@ export default function EditProductModal({
               value={editedProduct.description}
               onChange={handleInputChange}
               multiline
-              rows={4}
-              className="w-full mb-4"
+              rows={3}
+              className="w-full"
             />
+            <SelectCategories productId={editedProduct.product_id}/>
             <ImageUploader onUpload={handleFileSelect} />
             <Button variant="contained" onClick={handleSave} className="mt-4">
               Save

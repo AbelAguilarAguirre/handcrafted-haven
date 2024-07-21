@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import ImageUploader from "@/app/ui/profile/ImageUploader";
 import { Product } from "@/app/lib/definitions";
 import { addProduct } from "@/app/lib/actions";
+import SelectCategories from "./select-categories";
 import axios from "axios";
 
 interface AddProductModalProps {
@@ -96,8 +97,9 @@ export default function AddProductModal({
             onChange={handleInputChange}
             multiline
             rows={4}
-            className="w-full mb-4"
+            className="w-full"
         />
+        <SelectCategories productId="" />
         <ImageUploader onUpload={handleFileSelect} />
         <Button variant="contained" onClick={handleSave} className="mt-4">
           Save
