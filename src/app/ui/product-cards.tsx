@@ -9,11 +9,13 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Product } from "../lib/definitions";
 import { CartItem } from "../lib/definitions";
 import { useCart } from "@/app/ui/cart/CartContext";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { Product } from "@/app/lib/definitions";
+
+
 
 
 export function ProductCard({ product }: { product: Product}) {
@@ -61,95 +63,69 @@ export function ProductCard({ product }: { product: Product}) {
 
 
 export function CartProductCard({ cartItem }: { cartItem: CartItem }) {
-    const [isVisible, setIsVisible] = useState(true);
-    const [quantity, setQuantity] = useState(cartItem.quantity);
-    const { data: session } = useSession();
+  const [quantity, setQuantity] = useState(cartItem.quantity);
+  const { data: session } = useSession();
+  const { decreaseQuantity, increaseQuantity, removeItem } = useCart();
 
-    const handleRemove = () => {
-        setIsVisible(false);
-    };
-  const { decreaseQuantity, increaseQuantity, removeItem, cartItemsCopy } = useCart();
+  const handleRemove = () => {
+    removeItem(cartItem.cart_item_id, cartItem.quantity);
+  };
+
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      decreaseQuantity(cartItem.cart_item_id);
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleIncrease = async () => {
+    if (session?.user?.id) {
+      await increaseQuantity(cartItem.product_id, session.user.id);
+      setQuantity(quantity + 1);
+    }
+  };
+
   return (
-    isVisible && (
-      <div className="w-full p-4 flex my-2 justify-center flex-grow gap-2 md:gap-4 border-y-2">
+    <div className="flex justify-center">
+      <div className="p-4 flex md:w-[80vw] my-2 gap-2 md:gap-4 border-2">
         <Image
-          src={`${cartItem.image_url}`}
+          src={cartItem.image_url}
           width={180}
           height={160}
-          alt={`${cartItem.name}`}
+          alt={cartItem.name}
         />
-        <div className="flex flex-col items-stretch justify-between h-full min-h-[180px]">
+        <div className="flex flex-col items-stretch justify-between h-full w-full min-h-[180px]">
           <div className="flex items-center justify-between">
             <Link href={`/product/${cartItem.product_id}`}>
               <p className="font-bold md:text-xl">{cartItem.name}</p>
             </Link>
-            <p className="font-bold md:text-2xl">{cartItem.price}</p>
+            <p className="font-bold md:text-2xl ml-4">${cartItem.price}</p>
           </div>
           <p className="text-sm md:text-md line-clamp-2 max-w-[550px]">
             {cartItem.description}
           </p>
           <div className="flex justify-between items-center mt-4">
-            <IconButton className="md:hidden" color="error" aria-label="remove">
-              <DeleteIcon
-                onClick={() => {
-                  removeItem(cartItem.cart_item_id, cartItem.quantity)
-                  handleRemove();
-                  cartItemsCopy.filter((item) => item.cart_item_id !== cartItem.cart_item_id)
-                    }
-                }
-              />
-            </IconButton>
-            <Button
-              className="hidden md:inline-flex"
-              variant="outlined"
+            <IconButton
               color="error"
-              startIcon={<DeleteIcon />}
-              onClick={() => {
-                removeItem(cartItem.cart_item_id, cartItem.quantity);
-                handleRemove();
-              }}
+              aria-label="remove"
+              onClick={handleRemove}
             >
-              Remove from Cart
-            </Button>
+              <DeleteIcon />
+            </IconButton>
             <ButtonGroup size="small" aria-label="Small button group">
-              <Button
-                aria-label="decrease"
-                onClick={() => {
-                    if (quantity > 1) {
-                        decreaseQuantity(cartItem.cart_item_id);
-                        setQuantity(quantity - 1);
-                        cartItemsCopy.map((item) => {
-                            if (item.cart_item_id === cartItem.cart_item_id) {
-                                item.quantity = quantity - 1;
-                            }
-                        });
-                    }
-                }}
-              >
+              <Button aria-label="decrease" onClick={handleDecrease}>
                 <ChevronLeftIcon />
               </Button>
               <Button className="font-bold text-black cursor-default pointer-events-none">
                 {quantity}
               </Button>
-              <Button
-                aria-label="increase"
-                onClick={() => {
-                  increaseQuantity(cartItem.product_id, session?.user?.id);
-                  setQuantity(quantity + 1);
-                  cartItemsCopy.map((item) => {
-                            if (item.cart_item_id === cartItem.cart_item_id) {
-                                item.quantity = quantity + 1;
-                            }
-                        }
-                    );
-                }}
-              >
+              <Button aria-label="increase" onClick={handleIncrease}>
                 <ChevronRightIcon />
               </Button>
             </ButtonGroup>
           </div>
         </div>
       </div>
-    )
+    </div>
   );
 }

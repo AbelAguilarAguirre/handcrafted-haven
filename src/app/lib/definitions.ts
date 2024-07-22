@@ -47,3 +47,8 @@ export type Review = {
     name: string;
     image_url: string;
 };
+
+export type Category = {
+    category_id: string;
+    name: string;
+}

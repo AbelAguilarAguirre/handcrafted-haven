@@ -1,7 +1,7 @@
 'use server';
 
 import { sql} from "@vercel/postgres";
-import { Product, CartItem, Review, User } from "./definitions";
+import { Product, CartItem, Review, User, Category } from "./definitions";
 
 import { unstable_noStore as noStore } from "next/cache";
 import { UUID } from "crypto";
@@ -92,7 +92,7 @@ export async function fetchProducts(maxPrice: number = 1000, searchQuery: string
   
     try {
       const products = await sql<Product>`
-        SELECT 
+        SELECT DISTINCT ON (product.product_id)
             product.product_id, 
             product.name, 
             product.description, 
@@ -109,7 +109,7 @@ export async function fetchProducts(maxPrice: number = 1000, searchQuery: string
             (product.name ILIKE ${`%${searchQuery}%`} OR 
             product.description ILIKE ${`%${searchQuery}%`} OR
             category.name ILIKE ${`%${searchQuery}%`})
-        ORDER BY product.price DESC;
+        ORDER BY product.product_id, product.price DESC;
       `;
   
         return products.rows;
@@ -232,5 +232,34 @@ export async function fetchUserById(userId: UUID) {
     catch (error) {
         console.error("Database error:", error);
         throw new Error("An error occurred while fetching user");
+    }
+}
+
+export async function fetchCategories(): Promise<Category[] | undefined> {
+    try {
+        const category = await sql<Category>`
+            SELECT * FROM "category"
+        `;
+
+        return category.rows;
+    } catch (error) {
+        console.error('Database error: ', error);
+    }
+}
+
+export async function fetchCategoriesByProductId(productId: string): Promise<Category[] | undefined> {
+    try {
+        const category = await sql<Category>`
+            SELECT c.name
+            FROM "category" AS c
+            INNER JOIN 
+                "product_category" AS pc ON c.category_id = pc.category_id
+            WHERE
+                pc.product_id = ${productId} 
+        `;
+
+        return category.rows;
+    } catch (error) {
+        console.error('Database error: ', error);
     }
 }

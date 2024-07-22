@@ -50,8 +50,8 @@ export default function DeleteProductModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-auto">
-      <div className="bg-white p-6 rounded shadow-lg w-96">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded shadow-lg w-96 min-h-[290px] max-h-[90vh] overflow-auto">
         <h2 className="text-2xl mb-4">Edit Product</h2>
         <Select
           value={selectedProductId || ""}
@@ -64,19 +64,19 @@ export default function DeleteProductModal({
             </MenuItem>
           ))}
         </Select>
-          <>
-            <Button 
-                variant="contained" 
-                onClick={handleDelete} 
-                className="mt-4"
-                color="error"
-            >
-                Delete
-            </Button>
-          </>
-            <Button variant="outlined" onClick={onClose} className="mt-4 ml-2">
-            Close
-            </Button>
+        <>
+          <Button
+            variant="contained"
+            onClick={handleDelete}
+            className="mt-4"
+            color="error"
+          >
+            Delete
+          </Button>
+        </>
+        <Button variant="outlined" onClick={onClose} className="mt-4 ml-2">
+          Close
+        </Button>
       </div>
     </div>
   );
