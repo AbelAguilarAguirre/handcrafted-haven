@@ -106,8 +106,8 @@ export default function EditProductModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-auto">
-      <div className="bg-white p-6 rounded shadow-lg w-96 min-h-[290px]">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded shadow-lg w-96 min-h-[290px] max-h-[90vh] overflow-auto">
       <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl">Edit Product</h2>
           <Button variant="outlined" color="error" onClick={onClose}>
