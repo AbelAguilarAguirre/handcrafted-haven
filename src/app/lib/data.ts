@@ -92,7 +92,7 @@ export async function fetchProducts(maxPrice: number = 1000, searchQuery: string
   
     try {
       const products = await sql<Product>`
-        SELECT 
+        SELECT DISTINCT ON (product.product_id)
             product.product_id, 
             product.name, 
             product.description, 
@@ -109,7 +109,7 @@ export async function fetchProducts(maxPrice: number = 1000, searchQuery: string
             (product.name ILIKE ${`%${searchQuery}%`} OR 
             product.description ILIKE ${`%${searchQuery}%`} OR
             category.name ILIKE ${`%${searchQuery}%`})
-        ORDER BY product.price DESC;
+        ORDER BY product.product_id, product.price DESC;
       `;
   
         return products.rows;
