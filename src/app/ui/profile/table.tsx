@@ -18,10 +18,12 @@ export default function ProductsTable({
   products,
   params,
   totalPages,
+  userId,
 }: {
   products: Product[];
   params: { id: UUID };
   totalPages: number;
+  userId: UUID | undefined;
 }) {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -86,7 +88,7 @@ export default function ProductsTable({
     <>
       <div className="flex flex-col md:flex-row align-center justify-center md:justify-between mb-4 px-4 w-[80vw] mx-auto">
         <h2 className="text-center md:text-start text-4xl font-bold">Products</h2>
-        {session?.user.id === id && (
+        {(session?.user.id === id || userId === id) && (
           <Button
             variant="contained"
             className="mt-4 md:mt-0 mx-2"
@@ -132,6 +134,7 @@ export default function ProductsTable({
         isOpen={addModalOpen}
         onClose={closeAddModal}
         onSave={saveNewProduct}
+        id={userId}
       />
       <DeleteProductModal
         isOpen={deleteModalOpen}

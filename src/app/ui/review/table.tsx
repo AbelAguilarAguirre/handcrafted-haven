@@ -8,7 +8,7 @@ import { Review } from "@/app/lib/definitions";
 import ReviewForm from "./review-form";
 import { useReview } from "./ReviewContext";
 
-export default function ReviewsTable({ product_id }: { product_id: UUID }) {
+export default function ReviewsTable({ product_id, userId }: { product_id: UUID, userId: UUID | undefined }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showAll, setShowAll] = useState(false);
   const { reviewCount } = useReview();
@@ -27,10 +27,10 @@ export default function ReviewsTable({ product_id }: { product_id: UUID }) {
   return (
       <div className="py-16 bg-white">
         <div className="container mx-auto px-6 lg:px-8">
-          <ReviewForm product_id={product_id}/>
+          <ReviewForm product_id={product_id} userId={userId} />
           <div>
             {displayedReviews.map((review) => (
-              <ReviewCard key={review.review_id} review={review} />
+              <ReviewCard key={review.review_id} review={review} userId={userId} />
             ))}
           </div>
           {reviews.length > 5 && (
