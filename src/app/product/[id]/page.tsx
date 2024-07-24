@@ -22,9 +22,11 @@ export default async function Page({ params }: { params: { id: UUID } }) {
   const product = await fetchProductByProductId(id);
   const user = await fetchUserById(product.user_id);
   return (
-    <ReviewProvider>
-      <ProductDetails product={product} user={user} id={userId} />
-    </ReviewProvider>
+    <main>
+      <ReviewProvider>
+        <ProductDetails product={product} user={user} id={userId} />
+      </ReviewProvider>
+    </main>
     );
       
 }
