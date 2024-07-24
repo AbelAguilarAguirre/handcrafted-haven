@@ -87,6 +87,240 @@ export async function fetchProductsByUserId(userId: UUID) {
     }
 }
 
+export async function fetchProductsByFilter(
+  query: string | undefined,
+  category: string | undefined,
+  min: number | undefined,
+  max: number | undefined
+) {
+  noStore();
+  try {
+    if (query || category || min) {
+      if (query && category && min) {
+        if (min < 2000) {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              (product.name ILIKE ${`%${query}%`} OR product.description ILIKE ${`%${query}%`}) AND
+              category.category_id = ${category} AND
+              product.price BETWEEN ${min} AND ${max}
+          `;
+          return products.rows;
+        } else {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              (product.name ILIKE ${`%${query}%`} OR product.description ILIKE ${`%${query}%`}) AND
+              category.category_id = ${category} AND
+              product.price >= ${min}
+          `;
+          return products.rows;
+        }
+      } else if (query && category) {
+        const products = await sql<Product>`
+          SELECT DISTINCT
+            product.product_id,
+            product.name,
+            product.description,
+            product.price,
+            product.image_url,
+            product.rating,
+            product.user_id
+          FROM product
+          JOIN product_category ON product.product_id = product_category.product_id
+          JOIN category ON product_category.category_id = category.category_id
+          WHERE
+            (product.name ILIKE ${`%${query}%`} OR product.description ILIKE ${`%${query}%`}) AND
+            category.category_id = ${category}
+        `;
+        return products.rows;
+      } else if (query && min) {
+        if (min < 2000) {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              (product.name ILIKE ${`%${query}%`} OR product.description ILIKE ${`%${query}%`}) AND
+              product.price BETWEEN ${min} AND ${max}
+          `;
+          return products.rows;
+        } else {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              (product.name ILIKE ${`%${query}%`} OR product.description ILIKE ${`%${query}%`}) AND
+              product.price >= ${min}
+          `;
+          return products.rows;
+        }
+      } else if (category && min) {
+        if (min < 2000) {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              category.category_id = ${category} AND
+              product.price BETWEEN ${min} AND ${max}
+          `;
+          return products.rows;
+        } else {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              category.category_id = ${category} AND
+              product.price >= ${min}
+          `;
+          return products.rows;
+        }
+      } else if (min) {
+        if (min < 2000) {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              product.price BETWEEN ${min} AND ${max}
+          `;
+          return products.rows;
+        } else {
+          const products = await sql<Product>`
+            SELECT DISTINCT
+              product.product_id,
+              product.name,
+              product.description,
+              product.price,
+              product.image_url,
+              product.rating,
+              product.user_id
+            FROM product
+            JOIN product_category ON product.product_id = product_category.product_id
+            JOIN category ON product_category.category_id = category.category_id
+            WHERE
+              product.price >= ${min}
+          `;
+          return products.rows;
+        }
+      } else if (category) {
+        const products = await sql<Product>`
+          SELECT DISTINCT
+            product.product_id,
+            product.name,
+            product.description,
+            product.price,
+            product.image_url,
+            product.rating,
+            product.user_id
+          FROM product
+          JOIN product_category ON product.product_id = product_category.product_id
+          JOIN category ON product_category.category_id = category.category_id
+          WHERE
+            category.category_id = ${category}
+        `;
+        return products.rows;
+      } else if (query) {
+        const products = await sql<Product>`
+          SELECT DISTINCT
+            product.product_id,
+            product.name,
+            product.description,
+            product.price,
+            product.image_url,
+            product.rating,
+            product.user_id
+          FROM product
+          JOIN product_category ON product.product_id = product_category.product_id
+          JOIN category ON product_category.category_id = category.category_id
+          WHERE
+            (product.name ILIKE ${`%${query}%`} OR product.description ILIKE ${`%${query}%`})
+        `;
+        return products.rows;
+      }
+    } else {
+      const products = await sql<Product>`
+        SELECT DISTINCT
+          product.product_id,
+          product.name,
+          product.description,
+          product.price,
+          product.image_url,
+          product.rating,
+          product.user_id
+        FROM product
+      `;
+      return products.rows;
+    }
+  } catch (error) {
+    console.error('Database Error:', error);
+  }
+}
+
+
 export async function fetchProducts(maxPrice: number = 1000, searchQuery: string = "") {
     noStore();
   
