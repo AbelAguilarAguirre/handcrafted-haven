@@ -21,6 +21,11 @@ const RegistrationSchema = z.object({
 }
 );
 
+const AuthenticationSchema = z.object({
+    email: z.string().email({ message: "Invalid email address" }),
+    password: z.string().min(8, { message: "Password must be at least 8 characters long" })
+});
+
 export type RegistrationState = {
     errors?: {
         name?: string[];
@@ -29,7 +34,16 @@ export type RegistrationState = {
         confirmPassword?: string[];
     };
     message?: string | null;
-    }
+}
+
+export type AuthenticateState = {
+    errors?: {
+        email?: string[];
+        password?: string[];
+    };
+    message?: string | null;
+}
+
 
 export async function createUser(prevState: RegistrationState, formData: FormData): Promise<RegistrationState> {
     const validatedFields = RegistrationSchema.safeParse({
@@ -63,19 +77,6 @@ export async function createUser(prevState: RegistrationState, formData: FormDat
     }
     redirect("/login");
 }
-
-export type AuthenticateState = {
-    errors?: {
-        email?: string[];
-        password?: string[];
-    };
-    message?: string | null;
-}
-
-const AuthenticationSchema = z.object({
-    email: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(8, { message: "Password must be at least 8 characters long" })
-});
 
 export async function authenticate(prevState: AuthenticateState, formData: FormData): Promise<AuthenticateState> {
     'use client';

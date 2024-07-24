@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
@@ -9,6 +9,7 @@ import { Product } from "@/app/lib/definitions";
 import { addProduct } from "@/app/lib/actions";
 import SelectCategories from "./select-categories";
 import axios from "axios";
+import { z } from "zod";
 import { UUID } from "crypto";
 
 interface AddProductModalProps {
@@ -30,21 +31,66 @@ export default function AddProductModal({
     price: 0,
     description: "",
   });
-  const [imageFile, setImageFile] = useState<File | null>();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [errors, setErrors] = useState<{
+    name?: string;
+    price?: string;
+    description?: string;
+  }>({});
+
+  const productSchema = z.object({
+    name: z.string().min(1, "Title is required"),
+    price: z.number().min(0.01, "Price must be greater than 0"),
+    description: z.string().min(1, "Description is required"),
+  });
 
   const handleFileSelect = (file: File): void => {
     setImageFile(file);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editedProduct) {
-      const { name, value } = event.target;
-      setEditedProduct({ ...editedProduct, [name]: value });
-    }
+    const { name, value } = event.target;
+    setEditedProduct({
+      ...editedProduct,
+      [name]: name === "price" ? parseFloat(value) : value,
+    });
   };
 
-  const handleSave = async (formData: FormData) => {
-    const categories = formData.get('categories');
+  const handleSave = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const result = productSchema.safeParse(editedProduct);
+
+    if (!result.success) {
+      const errorMessages: {
+        name?: string;
+        price?: string;
+        description?: string;
+      } = {};
+      result.error.errors.forEach((error) => {
+        if (error.path.includes("name")) {
+          errorMessages.name = error.message;
+        }
+        if (error.path.includes("price")) {
+          errorMessages.price = error.message;
+        }
+        if (error.path.includes("description")) {
+          errorMessages.description = error.message;
+        }
+      });
+      setErrors(errorMessages);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", editedProduct.name);
+    formData.append("price", editedProduct.price.toString());
+    formData.append("description", editedProduct.description);
+    formData.append(
+      "categories",
+      (document.querySelector('input[name="categories"]') as HTMLInputElement)
+        .value
+    );
 
     if (imageFile) {
       try {
@@ -57,25 +103,39 @@ export default function AddProductModal({
             file: reader.result,
           });
 
-            const imageUrl = response.data.url;
-            const product = await addProduct(
-                session?.user?.id || id,
-                editedProduct?.price,
-                editedProduct?.description,
-                editedProduct?.name,
-                imageUrl,
-                categories as string
-            );
-            if (editedProduct && product) {
-                onSave(product);
-                onClose();
-            }
+          const imageUrl = response.data.url;
+          const product = await addProduct(
+            session?.user?.id,
+            editedProduct.price,
+            editedProduct.description,
+            editedProduct.name,
+            imageUrl,
+            formData.get("categories") as string
+          );
+          if (product) {
+            onSave(product);
+            onClose();
+          }
+
         };
       } catch (error) {
         console.error("Error uploading image", error);
       }
-    } 
-    };
+    } else {
+      const product = await addProduct(
+        session?.user?.id,
+        editedProduct.price,
+        editedProduct.description,
+        editedProduct.name,
+        "",
+        formData.get("categories") as string
+      );
+      if (product) {
+        onSave(product);
+        onClose();
+      }
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -88,30 +148,43 @@ export default function AddProductModal({
             Close
           </Button>
         </div>
-        <form action={handleSave}>
+        <form onSubmit={handleSave}>
           <TextField
             label="Title"
             name="name"
+            value={editedProduct.name}
             onChange={handleInputChange}
             className="w-full mb-4"
+            required
+            error={!!errors.name}
+            helperText={errors.name}
           />
           <TextField
             label="Price"
             name="price"
             type="number"
+            value={editedProduct.price}
             onChange={handleInputChange}
             className="w-full mb-4"
+            required
+            error={!!errors.price}
+            helperText={errors.price}
           />
           <TextField
             label="Description"
             name="description"
+            value={editedProduct.description}
             onChange={handleInputChange}
             multiline
             rows={4}
             className="w-full"
+            required
+            error={!!errors.description}
+            helperText={errors.description}
           />
           <SelectCategories productId="" />
           <ImageUploader onUpload={handleFileSelect} />
+          <p>{imageFile ? imageFile.name : ""}</p>
           <Button type="submit" variant="contained" className="mt-4">
             Save
           </Button>

@@ -1,7 +1,6 @@
 "use client";
 
 import { UUID } from "crypto";
-import { Review } from "@/app/lib/definitions";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { deleteReviewById, addReview, updateReview } from "@/app/lib/actions";
 
