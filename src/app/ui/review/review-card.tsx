@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Review } from "@/app/lib/definitions";
 import Rating from "@mui/material/Rating";
@@ -11,29 +11,62 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import { useReview } from "./ReviewContext";
 import { useState } from "react";
+import { z } from "zod";
 
-
-
-export default function ReviewCard( { review }: {review: Review }) {
+export default function ReviewCard({ review }: { review: Review }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedReview, setEditedReview] = useState({
     title: review.title,
     review: review.review,
     rating: review.rating,
   });
+  const [errors, setErrors] = useState<{ title?: string; review?: string }>({});
   const { data: session } = useSession();
   const { removeReview, updateReviewDetails } = useReview();
 
-const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Define the zod schema for validation
+  const reviewSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    review: z.string().min(1, "Review is required"),
+    rating: z.number().min(1).max(5),
+  });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setEditedReview({
-        ...editedReview,
-        [name]: value,
+      ...editedReview,
+      [name]: value,
     });
-};
+  };
 
   const handleSave = () => {
-    updateReviewDetails(review.review_id, editedReview.title, editedReview.review, editedReview.rating);
+    // Validate the form data
+    const result = reviewSchema.safeParse(editedReview);
+
+    if (!result.success) {
+      // Extract error messages and set the errors state
+      const errorMessages: { title?: string; review?: string } = {};
+      result.error.errors.forEach((error) => {
+        if (error.path.includes("title")) {
+          errorMessages.title = error.message;
+        }
+        if (error.path.includes("review")) {
+          errorMessages.review = error.message;
+        }
+      });
+      setErrors(errorMessages);
+      return;
+    }
+
+    // If validation passes, proceed with updating the review
+    updateReviewDetails(
+      review.review_id,
+      editedReview.title,
+      editedReview.review,
+      editedReview.rating
+    );
     setIsEditing(false);
   };
 
@@ -47,6 +80,9 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaE
             value={editedReview.title}
             onChange={handleInputChange}
             fullWidth
+            required
+            error={!!errors.title}
+            helperText={errors.title}
           />
           <Rating
             size="medium"
@@ -64,6 +100,9 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaE
             fullWidth
             multiline
             rows={4}
+            required
+            error={!!errors.review}
+            helperText={errors.review}
           />
           <div className="flex justify-end space-x-2">
             <Button variant="contained" color="primary" onClick={handleSave}>
