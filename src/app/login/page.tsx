@@ -2,6 +2,7 @@ import LoginForm from "../ui/login-form";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+import { getUserId } from "../lib/data";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -11,11 +12,19 @@ export const metadata: Metadata = {
 export default async function LoginPage() {
     const session = await getServerSession();
     if (session) {
-        redirect("/");
+        const userId = await getUserId(session?.user?.email as string);
+        if (userId) {
+            redirect(`/profile/${userId}`);
+        } else {
+            redirect('/');
+        }
     }
+    
     return (
-        <div className="container pb-8 px-8 mx-auto text-center">
-            <LoginForm />
-        </div>
+        <main>
+            <div className="container pb-8 px-8 mx-auto text-center">
+                <LoginForm />
+            </div>
+        </main>
     );
 }

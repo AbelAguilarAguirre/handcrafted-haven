@@ -34,7 +34,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
     await removeFromCart(cartItemId);
     setCartItems(updatedItems);
-    setCartItemCount(cartItemCount - Number(quantity));
   };
 
   const increaseQuantity = async (product_id: UUID, user_id: UUID) => {
@@ -45,7 +44,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         : item
     );
     setCartItems(updatedItems);
-    setCartItemCount(cartItemCount + 1);
   };
 
   const decreaseQuantity = async (cart_item_id: UUID) => {
@@ -56,7 +54,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         : item
     );
     setCartItems(updatedItems);
-    setCartItemCount(cartItemCount - 1);
   };
 
   return (

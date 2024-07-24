@@ -31,7 +31,7 @@ export default function Hero() {
                 </button>
             </Link>
             <Link
-            href={"/"}>
+            href={"/register"}>
                 <button className="px-6 py-2 border border-white rounded-full hover:bg-white hover:text-black transition">
                     Sell Your Art
                 </button>

@@ -7,9 +7,9 @@ interface CartProps {
 
 export default function Cart({ itemCount }: CartProps) {
   return (
-    <div className="cursor-pointer ml-4 hover:scale-125 transform transition">
+    <div className="cursor-pointer md:ml-4 hover:scale-125 transform transition">
       <Badge badgeContent={itemCount > 0 ? itemCount : null} color="primary">
-        <ShoppingCartIcon />
+        <ShoppingCartIcon className='text-md md:text-xl lg:text-2xl' />
       </Badge>
     </div>
   );

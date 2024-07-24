@@ -38,7 +38,7 @@ export default function ProductList() {
 
   return (
     <>
-      <div className="p-4 flex flex-wrap justify-between gap-4 w-[80vw] mx-auto min-h-[50vh]">
+      <div className="p-4 flex flex-wrap justify-between gap-4 w-[80vw] mx-auto">
         {(displayedProducts.length > 0) ? (displayedProducts?.map((product) => (
           <ProductCard key={product.product_id} product={product} />
         ))) : (<p className='text-xl font-bold'>No Products Found!</p>)}

@@ -64,25 +64,22 @@ export function ProductCard({ product }: { product: Product}) {
 
 
 export function CartProductCard({ cartItem, id }: { cartItem: CartItem, id: UUID }) {
-  const [quantity, setQuantity] = useState(cartItem.quantity);
+  const { decreaseQuantity, increaseQuantity, removeItem, cartItemCount } = useCart();
   const { data: session } = useSession();
-  const { decreaseQuantity, increaseQuantity, removeItem } = useCart();
 
   const handleRemove = () => {
     removeItem(cartItem.cart_item_id, cartItem.quantity);
   };
 
   const handleDecrease = () => {
-    if (quantity > 1) {
+    if (cartItemCount > 1) {
       decreaseQuantity(cartItem.cart_item_id);
-      setQuantity(quantity - 1);
     }
   };
 
   const handleIncrease = async () => {
     if (session?.user?.id || id) {
-      await increaseQuantity(cartItem.product_id, session?.user.id || id);
-      setQuantity(quantity + 1);
+      increaseQuantity(cartItem.product_id, session?.user.id || id);
     }
   };
 
@@ -114,11 +111,13 @@ export function CartProductCard({ cartItem, id }: { cartItem: CartItem, id: UUID
               <DeleteIcon />
             </IconButton>
             <ButtonGroup size="small" aria-label="Small button group">
-              <Button aria-label="decrease" onClick={handleDecrease}>
+              {(cartItemCount > 1) ? (<Button aria-label="decrease" onClick={handleDecrease}>
                 <ChevronLeftIcon />
-              </Button>
+              </Button>) : (<Button aria-label="decrease" disabled>
+                <ChevronLeftIcon />
+              </Button>)}
               <Button className="font-bold text-black cursor-default pointer-events-none">
-                {quantity}
+                {cartItemCount}
               </Button>
               <Button aria-label="increase" onClick={handleIncrease}>
                 <ChevronRightIcon />
