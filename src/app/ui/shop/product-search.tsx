@@ -1,31 +1,43 @@
-import React, { useState } from "react";
+import React from "react";
+import CategoriesInput from "./categories-input";
+import PriceInput from "./price-input";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import SearchIcon from '@mui/icons-material/Search';
+import { useRouter } from "next/navigation";
 
-interface ProductSearchProps {
-  onSearch: (query: string) => void;
-}
 
-export default function ProductSearch({ onSearch }: ProductSearchProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+export default function ProductSearch() {
+  const router = useRouter();
 
-  const handleSearch = () => {
-    onSearch(searchQuery);
-  };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const category = formData.get('category');
+    const query = formData.get('query');
+    const minPrice = (formData.get('price') as string).split('-')[0];
+    const maxPrice = (formData.get('price') as string).split('-')[1];
+
+    router.push(`/shop?q=${(query ? query : '')}&category=${category ? category : ''}&min=${minPrice ? minPrice : ''}&max=${maxPrice? maxPrice : ''}&page=1`);
+  }
 
   return (
-    <div className="flex justify-center gap-4 p-4 bg-gray-50 rounded-md shadow-sm">
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search products..."
-        className="px-4 py-2 rounded-lg border border-gray-300"
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 md:gap-0 md:flex-row md:justify-center mb-[4rem]">
+      <CategoriesInput />
+      <PriceInput />
+      <TextField
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderRadius: 0,
+            },
+          },
+        }}
+        label="Search Products"
+        name="query"
       />
-      <button
-        onClick={handleSearch}
-        className="px-4 py-2 rounded-lg bg-blue-500 text-white shadow-lg transition-transform transform hover:scale-105"
-      >
-        Search
-      </button>
-    </div>
+      <Button type="submit" className="md:rounded-r-xl rounded-none" variant='outlined' startIcon={<SearchIcon />}>Search</Button>
+    </form>
   );
 }
