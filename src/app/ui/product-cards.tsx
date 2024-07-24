@@ -72,7 +72,7 @@ export function CartProductCard({ cartItem, id }: { cartItem: CartItem, id: UUID
   };
 
   const handleDecrease = () => {
-    if (cartItemCount > 1) {
+    if (cartItem.quantity > 1) {
       decreaseQuantity(cartItem.cart_item_id);
     }
   };
@@ -111,13 +111,13 @@ export function CartProductCard({ cartItem, id }: { cartItem: CartItem, id: UUID
               <DeleteIcon />
             </IconButton>
             <ButtonGroup size="small" aria-label="Small button group">
-              {(cartItemCount > 1) ? (<Button aria-label="decrease" onClick={handleDecrease}>
+              {(cartItem.quantity > 1) ? (<Button aria-label="decrease" onClick={handleDecrease}>
                 <ChevronLeftIcon />
               </Button>) : (<Button aria-label="decrease" disabled>
                 <ChevronLeftIcon />
               </Button>)}
               <Button className="font-bold text-black cursor-default pointer-events-none">
-                {cartItemCount}
+                {cartItem.quantity}
               </Button>
               <Button aria-label="increase" onClick={handleIncrease}>
                 <ChevronRightIcon />
