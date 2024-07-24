@@ -37,22 +37,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const increaseQuantity = async (product_id: UUID, user_id: UUID) => {
-    await addToCart(product_id, user_id);
     const updatedItems = cartItems.map((item) =>
       item.product_id === product_id
-        ? { ...item, quantity: item.quantity + 1 }
-        : item
-    );
+    ? { ...item, quantity: item.quantity + 1 }
+    : item
+  );
+    await addToCart(product_id, user_id);
     setCartItems(updatedItems);
   };
 
   const decreaseQuantity = async (cart_item_id: UUID) => {
-    await removeOneFromCart(cart_item_id);
     const updatedItems = cartItems.map((item) =>
-      item.cart_item_id === cart_item_id
-        ? { ...item, quantity: item.quantity - 1 }
-        : item
+        item.cart_item_id === cart_item_id
+      ? { ...item, quantity: item.quantity - 1 }
+      : item
     );
+    await removeOneFromCart(cart_item_id);
     setCartItems(updatedItems);
   };
 
