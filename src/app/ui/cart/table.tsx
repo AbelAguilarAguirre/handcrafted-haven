@@ -6,13 +6,15 @@ import { CartItem } from "@/app/lib/definitions";
 import CartSummary from "./summary";
 import { useCart } from "@/app/ui/cart/CartContext";
 import { UUID } from "crypto";
+import { getCartItemsByUserId } from "@/app/lib/data";
 
-export default function CartTable({ cartItems, id }: { cartItems: CartItem[], id: UUID }) {
+export default function CartTable({ id }: { id: UUID }) {
   const { cartItems: cartItemsCopy, setCartItems } = useCart();
 
   useEffect(() => {
-    setCartItems(cartItems);
-  }, [cartItems]);
+    getCartItemsByUserId(id)
+    .then((cartItems) => setCartItems(cartItems || []));
+  }, []);
 
   return (
     <div>

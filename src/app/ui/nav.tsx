@@ -27,7 +27,7 @@ export default function Nav({ id }: { id: UUID | undefined }) {
   return (
     <>
       <nav className="">
-        <ul className="flex flex-wrap justify-around items-center ">
+        <ul className="text-sm md:text-md lg:text-lg flex justify-between md:justify-around items-center ">
           <li className="mx-2">
             <Link className="hover:underline" href="/shop">
               Shop

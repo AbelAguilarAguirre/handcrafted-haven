@@ -24,14 +24,14 @@ export default async function Page({ params }: { params: { id: UUID } }) {
         const totalPages = await fetchProductsPages(id);
         const user = await fetchUserById(id);
         return (
-            <div className="flex flex-col items-center min-h-[70vh]">
-                <ProfileDetails user={user} userId={userId}/>
-                <div>
-
-                    <ProductsTable products={products ?? []} params={params} totalPages={totalPages ?? 1} userId={userId}/>
-
+            <main>
+                <div className="flex flex-col items-center">
+                    <ProfileDetails user={user} userId={userId}/>
+                    <div>
+                        <ProductsTable products={products ?? []} params={params} totalPages={totalPages ?? 1} userId={userId}/>
+                    </div>
                 </div>
-            </div>
+            </main>
         );
     } catch (error) {
         console.error("Database error:", error);

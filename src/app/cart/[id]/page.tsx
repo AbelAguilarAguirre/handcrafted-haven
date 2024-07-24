@@ -15,10 +15,11 @@ export default async function CartPage({ params }: { params: { id: UUID } }) {
   const id = params.id;
     const session = await getServerSession();
     if (!session) {
-        redirect("/login");
+      redirect("/login");
     }
-    const cart_items = await getCartItemsByUserId(id);
   return (
-    <CartTable cartItems={cart_items || []} id={id}/>
+    <main>
+      <CartTable id={id}/>
+    </main>
   );
 }

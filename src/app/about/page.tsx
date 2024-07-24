@@ -8,8 +8,10 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
     return (
-        <div className="container pb-8 px-8 mx-auto text-center">
-            <Benefit />
-        </div>
+        <main>   
+            <div className="container pb-8 px-8 mx-auto text-center">
+                <Benefit />
+            </div>
+        </main>
     );
 }
