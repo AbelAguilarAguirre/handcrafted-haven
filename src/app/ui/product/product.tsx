@@ -13,7 +13,7 @@ import { useReview } from "../review/ReviewContext";
 import Link from "next/link";
 import { getReviewsById, fetchUserById } from "@/app/lib/data";
 
-export function ProductDetails({ product, user }: { product: Product, user: User }) {
+export function ProductDetails({ product, user, id }: { product: Product, user: User, id: UUID | undefined }) {
   const { data: session } = useSession();
   const { reviewCount } = useReview();
   const [rating, setRating] = useState(product.rating);
@@ -22,7 +22,7 @@ export function ProductDetails({ product, user }: { product: Product, user: User
   let user_id: UUID;
 
   if (session) {
-    user_id = session.user.id;
+    user_id = session.user.id || id;
   }
 
   const { cartItemCount, updateCartItemCount } = useCart();
@@ -90,7 +90,7 @@ export function ProductDetails({ product, user }: { product: Product, user: User
           <button
             onClick={() => {
               if (session) {
-                addToCart(product.product_id, user_id);
+                addToCart(product.product_id, user_id || id);
                 updateCartItemCount(Number(cartItemCount) + 1);
               } else {
                 alert("Please login to add items to your cart");
@@ -102,7 +102,7 @@ export function ProductDetails({ product, user }: { product: Product, user: User
           </button>
         </div>
       </div>
-      <ReviewsTable product_id={product.product_id} />
+      <ReviewsTable product_id={product.product_id} userId={id} />
     </>
   );
 }

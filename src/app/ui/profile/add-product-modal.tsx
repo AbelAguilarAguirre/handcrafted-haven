@@ -10,17 +10,20 @@ import { addProduct } from "@/app/lib/actions";
 import SelectCategories from "./select-categories";
 import axios from "axios";
 import { z } from "zod";
+import { UUID } from "crypto";
 
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (product: Product) => void;
+  id: UUID | undefined;
 }
 
 export default function AddProductModal({
   isOpen,
   onClose,
   onSave,
+  id,
 }: AddProductModalProps) {
   const { data: session } = useSession();
   const [editedProduct, setEditedProduct] = useState({
@@ -113,6 +116,7 @@ export default function AddProductModal({
             onSave(product);
             onClose();
           }
+
         };
       } catch (error) {
         console.error("Error uploading image", error);

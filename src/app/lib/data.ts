@@ -263,3 +263,15 @@ export async function fetchCategoriesByProductId(productId: string): Promise<Cat
         console.error('Database error: ', error);
     }
 }
+
+export async function getUserId(email: string): Promise<UUID | undefined> {
+    try {
+        const user = await sql<User>`
+            SELECT user_id FROM "user" WHERE email = ${email}
+        `;
+
+        return user.rows[0].user_id;
+    } catch (error) {
+        console.error('Database error: ', error);
+    }
+}

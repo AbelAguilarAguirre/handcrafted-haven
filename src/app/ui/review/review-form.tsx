@@ -10,11 +10,12 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import { z } from "zod";
 
-export default function ReviewForm({ product_id }: { product_id: UUID }) {
+export default function ReviewForm({ product_id, userId }: { product_id: UUID, userId: UUID | undefined }) {
   const [showForm, setShowForm] = useState(false);
   const { data: session } = useSession();
-  const user_id = session?.user?.id;
-  const { addNewReview } = useReview();
+
+  const user_id = session?.user?.id || userId;
+  const { addNewReview} = useReview();
   const [newReview, setNewReview] = useState({
     title: "",
     review: "",
