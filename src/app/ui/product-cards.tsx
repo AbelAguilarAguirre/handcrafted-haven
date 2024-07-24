@@ -14,6 +14,7 @@ import { useCart } from "@/app/ui/cart/CartContext";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Product } from "@/app/lib/definitions";
+import { UUID } from "crypto";
 
 
 
@@ -62,7 +63,7 @@ export function ProductCard({ product }: { product: Product}) {
 }
 
 
-export function CartProductCard({ cartItem }: { cartItem: CartItem }) {
+export function CartProductCard({ cartItem, id }: { cartItem: CartItem, id: UUID }) {
   const [quantity, setQuantity] = useState(cartItem.quantity);
   const { data: session } = useSession();
   const { decreaseQuantity, increaseQuantity, removeItem } = useCart();
@@ -79,8 +80,8 @@ export function CartProductCard({ cartItem }: { cartItem: CartItem }) {
   };
 
   const handleIncrease = async () => {
-    if (session?.user?.id) {
-      await increaseQuantity(cartItem.product_id, session.user.id);
+    if (session?.user?.id || id) {
+      await increaseQuantity(cartItem.product_id, session?.user.id || id);
       setQuantity(quantity + 1);
     }
   };

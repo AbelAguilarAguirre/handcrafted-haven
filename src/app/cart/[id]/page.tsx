@@ -19,6 +19,6 @@ export default async function CartPage({ params }: { params: { id: UUID } }) {
     }
     const cart_items = await getCartItemsByUserId(id);
   return (
-    <CartTable cartItems={cart_items || []} />
+    <CartTable cartItems={cart_items || []} id={id}/>
   );
 }

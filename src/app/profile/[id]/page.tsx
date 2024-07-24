@@ -1,8 +1,9 @@
 import ProductsTable from '@/app/ui/profile/table';
 import ProfileDetails from '@/app/ui/profile/profile-details';
-import { fetchProductsByUserId, fetchProductsPages, fetchUserById } from '@/app/lib/data';
+import { fetchProductsByUserId, fetchProductsPages, fetchUserById, getUserId } from '@/app/lib/data';
 import { UUID } from 'crypto';
 import { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -12,6 +13,11 @@ export const metadata: Metadata = {
 
 
 export default async function Page({ params }: { params: { id: UUID } }) {
+    const session = await getServerSession();
+    let userId: UUID | undefined;
+    if (session) {
+      userId = await getUserId(session?.user?.email ?? "");
+    }
     const id = params.id;
     try {
         const products = await fetchProductsByUserId(id);
@@ -19,10 +25,10 @@ export default async function Page({ params }: { params: { id: UUID } }) {
         const user = await fetchUserById(id);
         return (
             <div className="flex flex-col items-center min-h-[70vh]">
-                <ProfileDetails user={user}/>
+                <ProfileDetails user={user} userId={userId}/>
                 <div>
 
-                    <ProductsTable products={products ?? []} params={params} totalPages={totalPages ?? 1}/>
+                    <ProductsTable products={products ?? []} params={params} totalPages={totalPages ?? 1} userId={userId}/>
 
                 </div>
             </div>

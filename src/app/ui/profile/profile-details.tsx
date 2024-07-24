@@ -10,8 +10,9 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { updateProfile } from "@/app/lib/actions";
+import { UUID } from "crypto";
 
-export default function ProfileDetails({ user }: { user: User }) {
+export default function ProfileDetails({ user, userId }: { user: User, userId: UUID | undefined }) {
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [profileImage, setProfileImage] = useState(
@@ -93,7 +94,7 @@ export default function ProfileDetails({ user }: { user: User }) {
               />
               <h2 className="text-xl font-bold text-center">{profileName}</h2>
             </div>
-            {session?.user.id == user.user_id && (
+            {(session?.user.id == user.user_id || userId == user.user_id) && (
               <button
                 className="text-gray-500 hover:text-gray-700 absolute top-[65px] left-[85px]"
                 onClick={() => setIsEditing(true)}
@@ -104,7 +105,7 @@ export default function ProfileDetails({ user }: { user: User }) {
             <div className="ml-4 flex-1">
               <div className="flex items-center justify-between"></div>
               <p className="m-2 text-gray-600">
-                {profileBio ??  (session?.user.id == user.user_id ? "Edit your profile to add a bio." : "No bio available.")}
+                {profileBio ??  ((session?.user.id == user.user_id || userId == user.user_id) ? "Edit your profile to add a bio." : "No bio available.")}
               </p>
             </div>
           </>

@@ -11,10 +11,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import { useReview } from "./ReviewContext";
 import { useState } from "react";
+import { UUID } from "crypto";
 
 
 
-export default function ReviewCard( { review }: {review: Review }) {
+export default function ReviewCard( { review, userId }: {review: Review, userId: UUID | undefined}) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedReview, setEditedReview] = useState({
     title: review.title,
@@ -97,7 +98,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaE
           </div>
           <p className="mt-2 text-gray-600">{editedReview.review}</p>
           <div className="mt-4">
-            {session?.user?.id === review.user_id && (
+            {(session?.user?.id === review.user_id || userId === review.user_id) && (
               <>
                 <IconButton onClick={() => setIsEditing(true)}>
                   <EditIcon />

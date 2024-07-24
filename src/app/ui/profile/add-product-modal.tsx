@@ -9,17 +9,20 @@ import { Product } from "@/app/lib/definitions";
 import { addProduct } from "@/app/lib/actions";
 import SelectCategories from "./select-categories";
 import axios from "axios";
+import { UUID } from "crypto";
 
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (product: Product) => void;
+  id: UUID | undefined;
 }
 
 export default function AddProductModal({
   isOpen,
   onClose,
   onSave,
+  id,
 }: AddProductModalProps) {
   const { data: session } = useSession();
   const [editedProduct, setEditedProduct] = useState({
@@ -56,7 +59,7 @@ export default function AddProductModal({
 
             const imageUrl = response.data.url;
             const product = await addProduct(
-                session?.user?.id,
+                session?.user?.id || id,
                 editedProduct?.price,
                 editedProduct?.description,
                 editedProduct?.name,

@@ -6,20 +6,18 @@ import { signOut, useSession } from 'next-auth/react';
 import { useCart } from "@/app/ui/cart/CartContext";
 import { useEffect } from "react";
 import { getCartItemCount } from "@/app/lib/data";
+import { UUID } from "crypto";
 
 
-export default function Nav() {
+export default function Nav({ id }: { id: UUID | undefined }) {
   const { data: session } = useSession();
     const { cartItemCount, updateCartItemCount } = useCart();
       useEffect(() => {
-        // This function could be async if getCartItemCount is an async operation
         const updateCount = async () => {
           if (session) {
-            // Assuming getCartItemCount returns a Promise, await its result
-            const count = await getCartItemCount(session.user.id);
+            const count = await getCartItemCount(session.user.id || id);
             updateCartItemCount(count);
           } else {
-            // Reset cart item count if there's no session
             updateCartItemCount(0);
           }
         };
@@ -45,7 +43,7 @@ export default function Nav() {
               <li className="mx-2">
                 <Link
                   className="hover:underline"
-                  href={`/profile/${session?.user?.id}`}
+                  href={`/profile/${session?.user?.id || id}`}
                   title="My Profile"
                 >
                   {session?.user?.name}
@@ -63,7 +61,7 @@ export default function Nav() {
           {session ? (
             <li>
               <Link
-                href={`/cart/${session?.user?.id}`}
+                href={`/cart/${session?.user?.id || id}`}
               >
                 <Cart itemCount={cartItemCount} />
               </Link>
