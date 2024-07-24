@@ -61,6 +61,7 @@ export default function Nav({ id }: { id: UUID | undefined }) {
           {session ? (
             <li>
               <Link
+                aria-label="Cart"
                 href={`/cart/${session?.user?.id || id}`}
               >
                 <Cart itemCount={cartItemCount} />
